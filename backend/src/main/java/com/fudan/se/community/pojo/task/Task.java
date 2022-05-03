@@ -1,9 +1,13 @@
 package com.fudan.se.community.pojo.task;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+
+import java.sql.Timestamp;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -41,7 +45,8 @@ public class Task implements Serializable {
 
     private Integer teamSize;
 
-    private Date ddl;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    private Timestamp ddl;
 
     private Integer validity;
 

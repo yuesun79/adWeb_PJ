@@ -22,9 +22,6 @@ class CommunityApplicationTests {
     @Test
     public void testSelect() {
         List<User> res = userMapper.selectList(null);
-        for (User user : res) {
-            log.info(String.valueOf(user));
-        }
     }
 
 

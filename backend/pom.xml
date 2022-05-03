@@ -82,12 +82,19 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>3.4.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-extension</artifactId>
+            <version>3.4.2</version>
+        </dependency>
 <!--        代码生成器 AutoGenerator 快速生成 Entity、Mapper、Mapper XML、Service、Controller 等各个模块的代码 -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-generator</artifactId>
             <version>3.3.1.tmp</version>
         </dependency>
+        <!--        mybatis-plus-->
+
         <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity-engine-core</artifactId>
@@ -158,16 +165,17 @@
             </plugin>
         </plugins>
         <!--        配置文件，资源Mapper扫描-->
-<!--        <resources>-->
-<!--            <resource>-->
-<!--                <directory>src/main/resources</directory>-->
-<!--                <includes>-->
-<!--                    <include>mapper/*.xml</include>-->
-<!--                    <include>**/*.yml</include>-->
-<!--                    <include>**/*.*</include>-->
-<!--                </includes>-->
-<!--            </resource>-->
-<!--        </resources>-->
+        <!--        扫描mapper-->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>mapper/*.xml</include>
+                    <include>**/*.yml</include>
+                    <include>**/*.*</include>
+                </includes>
+            </resource>
+        </resources>
     </build>
 
 </project>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fudan.se.community.mapper.TaskMapper">
+
+    <select id="retrieveTask_classId" resultType="com.fudan.se.community.pojo.task.Task" parameterType="Integer">
+        SELECT *
+        FROM task
+        JOIN class_task r ON task.id = r.task_id
+        WHERE r.class_id = #{classId}
+    </select>
+</mapper>
