@@ -11,8 +11,8 @@ import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import org.junit.jupiter.api.Test;
 
 public class TestAutoGenerate {
-//    @Test
-//    public void autoGenerate() {
+    @Test
+    public void autoGenerate() {
 //        // Step1：代码生成器
 //        AutoGenerator mpg = new AutoGenerator();
 //
@@ -89,5 +89,5 @@ public class TestAutoGenerate {
 //
 //        // Step6：执行代码生成操作
 //        mpg.execute();
-//    }
+    }
 }

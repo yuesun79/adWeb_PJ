@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class AcceptTaskRequest {
-    private long userId;
-    private long taskId;
+    private Integer userId;
+    private Integer taskId;
 }

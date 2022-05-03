@@ -6,6 +6,7 @@ import java.sql.Blob;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.models.auth.In;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -36,6 +37,11 @@ public class Accept implements Serializable {
     private Integer process;
 
     private Blob file;
+
+    public Accept(Integer userId, Integer taskId) {
+        this.userId = userId;
+        this.taskId = taskId;
+    }
 
 
 }

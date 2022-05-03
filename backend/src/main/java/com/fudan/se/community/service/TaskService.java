@@ -10,4 +10,6 @@ public interface TaskService extends IService<Task> {
     List<Task> retrieveAllTasks_class(Integer classId);
     List<Task> retrieveAllTasks_user(Integer userId);
 
+    Task findTask_id(Integer taskId);
+
 }

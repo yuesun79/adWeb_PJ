@@ -16,5 +16,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class VGroupServiceImpl extends ServiceImpl<VGroupMapper, VGroup> implements VGroupService {
+    public void acceptTask_group(Integer userId, Integer taskId) {
 
+    }
 }

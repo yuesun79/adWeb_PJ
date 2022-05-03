@@ -10,7 +10,7 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Api("PostTaskController")
+@Api(tags="PostTaskController")
 @RestController
 public class PostTaskController {
     /** post **/
@@ -82,7 +82,7 @@ public class PostTaskController {
     })
 
     @RequestMapping(value = "admin/checkCompletion/groupTask", method = RequestMethod.PUT)
-    public ResponseEntity<Object> checkCompletion_group(@RequestParam CheckGTaskCompleteRequest checkGTaskCompleteRequest) {
+    public ResponseEntity<Object> checkCompletion_group(@RequestBody CheckGTaskCompleteRequest checkGTaskCompleteRequest) {
         return null;
     }
 

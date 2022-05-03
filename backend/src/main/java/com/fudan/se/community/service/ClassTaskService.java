@@ -19,9 +19,9 @@ import org.springframework.stereotype.Service;
 public class ClassTaskService extends ServiceImpl<ClassTaskMapper, ClassTask> {
     public Integer getTaskId_classId(Integer classId) {
         // 根据classId查class_task @
-        QueryWrapper<ClassTask> classTaskQueryWrapper = new QueryWrapper<>();
-        classTaskQueryWrapper.lambda()
+        QueryWrapper<ClassTask> wrapper = new QueryWrapper<>();
+        wrapper.lambda()
                 .eq(ClassTask::getClassId, classId);
-        return getOne(classTaskQueryWrapper).getTaskId();
+        return getOne(wrapper).getTaskId();
     }
 }

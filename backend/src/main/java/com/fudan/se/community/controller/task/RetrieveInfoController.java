@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@Api("RetrieveInfoController")
+@Api(tags="RetrieveInfoController")
 @RestController
 public class RetrieveInfoController {
 

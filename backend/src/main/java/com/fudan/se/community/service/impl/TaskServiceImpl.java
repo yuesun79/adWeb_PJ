@@ -1,5 +1,6 @@
 package com.fudan.se.community.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fudan.se.community.pojo.task.Task;
 import com.fudan.se.community.mapper.TaskMapper;
 import com.fudan.se.community.service.ClassTaskService;
@@ -42,5 +43,12 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, Task> implements Ta
     @Override
     public List<Task> retrieveAllTasks_user(Integer userId) {
         return null;
+    }
+
+    @Override
+    public Task findTask_id(Integer taskId) {
+        QueryWrapper<Task> wrapper = new QueryWrapper<>();
+        wrapper.lambda().eq(Task::getId, taskId);
+        return baseMapper.selectOne(wrapper);
     }
 }

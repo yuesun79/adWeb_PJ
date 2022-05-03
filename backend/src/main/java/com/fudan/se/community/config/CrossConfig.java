@@ -1,10 +1,12 @@
 package com.fudan.se.community.config;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+@Configuration
 public class CrossConfig {
     @Bean
     public CorsFilter corsFilter() {
@@ -18,6 +20,8 @@ public class CrossConfig {
 
         // 具体封装跨域配置信息的POJO CorsConfiguration
         CorsConfiguration corsConfiguration = new CorsConfiguration();
+
+        corsConfiguration.addAllowedOrigin("http://localhost");  //允许的域名访问
         corsConfiguration.addAllowedOrigin("http://localhost:8080");  //允许的域名访问
         corsConfiguration.addAllowedOrigin("http://106.15.170.212"); //允许的域名访问
         corsConfiguration.addAllowedHeader("*");  //允许所有请求头

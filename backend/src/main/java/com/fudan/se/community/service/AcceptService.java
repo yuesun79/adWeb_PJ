@@ -12,5 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2022-04-28
  */
 public interface AcceptService extends IService<Accept> {
-
+    public void acceptTask(Integer userId, Integer taskId);
 }

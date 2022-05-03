@@ -2,10 +2,10 @@ package com.fudan.se.community.controller.task;
 
 import com.fudan.se.community.controller.request.task.*;
 import com.fudan.se.community.controller.response.AcceptTaskResponse;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import com.fudan.se.community.service.AcceptService;
+import io.swagger.annotations.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +16,9 @@ public class AcceptTaskController {
     // TODO: 2022/4/26  
     // 获取该课堂所有的任务 v_class(id) class_task task
     // 筛选条件：个人/团体
+
+    @Autowired
+    AcceptService acceptService;
     
     @ApiOperation(value="用户接受个人任务",notes = "insert accept table")
     @ApiResponses({
@@ -23,8 +26,11 @@ public class AcceptTaskController {
             @ApiResponse(code = 400, message = "已经接受过该任务")
     })
     @RequestMapping(value = "/personalTaskOn", method = RequestMethod.POST)
-    public @ResponseBody AcceptTaskResponse acceptPersonalTask(@RequestBody AcceptTaskRequest acceptTaskRequest) {
-        return null;
+    public ResponseEntity<Object> acceptPersonalTask(
+            @ApiParam
+            @RequestBody AcceptTaskRequest acceptTaskRequest) {
+        acceptService.acceptTask(acceptTaskRequest.getUserId(), acceptTaskRequest.getTaskId());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // websocket /joinGroupTask /groupTaskOn 这两个接口应该只用一个
