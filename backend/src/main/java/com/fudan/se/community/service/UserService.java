@@ -1,5 +1,7 @@
 package com.fudan.se.community.service;
 
+import com.fudan.se.community.dto.LoginDto;
+import com.fudan.se.community.dto.RegisterDto;
 import com.fudan.se.community.pojo.user.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -8,9 +10,14 @@ import com.baomidou.mybatisplus.extension.service.IService;
  *  服务类
  * </p>
  *
- * @author SY
- * @since 2022-04-28
+ * @author dq
+ * @since 2021-05-24
  */
 public interface UserService extends IService<User> {
 
+    String register(RegisterDto registerDto);
+
+    String login(LoginDto loginDto);
+
+    String isExist(RegisterDto registerDto);
 }
