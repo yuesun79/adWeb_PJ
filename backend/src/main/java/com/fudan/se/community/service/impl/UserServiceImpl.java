@@ -49,6 +49,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if(pd==null){
             return "用户名错误";
         }else if(pd.equals(MD5Utils.code(loginDto.getPassword()))){
+
             return "用户名密码正确";
         }
         return "密码错误";

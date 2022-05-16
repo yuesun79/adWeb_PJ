@@ -5,11 +5,11 @@ import lombok.Getter;
 
 @Getter
 public class CommonResult {
-    private Integer code;
+    private String code;
     private String message;
     private Object obj;
 
-    private CommonResult(Integer code, String message, Object obj) {
+    public CommonResult(String code, String message, Object obj) {
         this.code = code;
         this.message = message;
         this.obj = obj;
