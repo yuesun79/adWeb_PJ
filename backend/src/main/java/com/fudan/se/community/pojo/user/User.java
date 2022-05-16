@@ -64,4 +64,9 @@ public class User implements Serializable {
     private String phone_num;
 
     private String email;
+    public User(){}
+    public User(String username, String s) {
+        this.username=username;
+        this.password=s;
+    }
 }
