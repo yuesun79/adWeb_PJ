@@ -2,10 +2,40 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fudan.se.community.mapper.TaskMapper">
 
-    <select id="retrieveTask_classId" resultType="com.fudan.se.community.pojo.task.Task" parameterType="Integer">
-        SELECT *
+    <select id="retrieveTask_classId" resultType="com.fudan.se.community.vm.Task" parameterType="Integer">
+        SELECT task.*,
+        user.username as publisherName, user.email as publisherEmail, user.phone_num as publisherPhone
         FROM task
         JOIN class_task r ON task.id = r.task_id
+        JOIN user ON task.publisher_id = user.id
         WHERE r.class_id = #{classId}
     </select>
+
+    <select id="retrieveTasks_userId_accept" resultType="com.fudan.se.community.vm.Task" parameterType="Integer">
+        SELECT task.*,
+        user.username as publisherName, user.email as publisherEmail, user.phone_num as publisherPhone
+        FROM task
+            JOIN
+            (SELECT task_id
+            FROM accept WHERE user_id = #{userId}) as TaskId
+            ON task.id = TaskId.task_id
+        JOIN user ON task.publisher_id = user.id;
+    </select>
+
+    <select id="retrieveTasks_userId_inGroup" resultType="com.fudan.se.community.vm.GroupTask" parameterType="Integer">
+        SELECT task.*,
+        user.username as publisherName, user.email as publisherEmail, user.phone_num as publisherPhone,
+        G.name as groupName, G.group_leader groupLeader, G.process groupProcess, G.group_id groupId
+        FROM task
+            JOIN
+            (SELECT *
+            FROM v_group as g
+                RIGHT JOIN
+                (SELECT group_id FROM in_group as r WHERE r.user_id = #{userId}) as GroupId
+                ON g.id = GroupID.group_id
+            ) as G
+            ON task.id = G.task_id
+        JOIN user ON task.publisher_id = user.id;
+    </select>
+
 </mapper>

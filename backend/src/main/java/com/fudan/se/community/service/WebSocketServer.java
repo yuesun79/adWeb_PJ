@@ -1,5 +1,6 @@
 package com.fudan.se.community.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @ServerEndpoint("/websocket/{sid}")
 @Component
 public class WebSocketServer {
+    // log ?
     static Log log = LogFactory.getLog(WebSocketServer.class);
 
     private static int onlineCount = 0;

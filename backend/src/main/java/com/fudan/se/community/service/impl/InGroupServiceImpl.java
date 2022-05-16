@@ -17,4 +17,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class InGroupServiceImpl extends ServiceImpl<InGroupMapper, InGroup> implements InGroupService {
 
+    @Override
+    public void acceptTask_group(Integer userId, Integer taskId) {
+        // 寻找是否有该任务对应的未满teamsize的group
+
+        // 存在 insert in_group
+
+        // 不存在 insert v_group in_group
+    }
 }

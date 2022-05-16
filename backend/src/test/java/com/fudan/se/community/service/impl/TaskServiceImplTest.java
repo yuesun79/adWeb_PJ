@@ -1,6 +1,6 @@
 package com.fudan.se.community.service.impl;
 
-import com.fudan.se.community.pojo.task.Task;
+import com.fudan.se.community.vm.Task;
 import com.fudan.se.community.service.TaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

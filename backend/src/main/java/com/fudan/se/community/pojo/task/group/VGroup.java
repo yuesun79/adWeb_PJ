@@ -39,5 +39,8 @@ public class VGroup implements Serializable {
 
     private Blob file;
 
-
+    public VGroup(Integer groupId, Integer taskId) {
+        this.id = groupId;
+        this.taskId = taskId;
+    }
 }

@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class SubmitPTaskRequest {
-    private long taskId;
+    private Integer userId;
+    private Integer taskId;
     private byte[] file;
 }

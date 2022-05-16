@@ -3,6 +3,7 @@ package com.fudan.se.community.controller.task;
 import com.fudan.se.community.controller.request.task.*;
 import com.fudan.se.community.controller.response.AcceptTaskResponse;
 import com.fudan.se.community.service.AcceptService;
+import com.fudan.se.community.service.VGroupService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,9 @@ public class AcceptTaskController {
 
     @Autowired
     AcceptService acceptService;
+
+    @Autowired
+    VGroupService vGroupService;
     
     @ApiOperation(value="用户接受个人任务",notes = "insert accept table")
     @ApiResponses({
@@ -33,8 +37,8 @@ public class AcceptTaskController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // websocket /joinGroupTask /groupTaskOn 这两个接口应该只用一个
-    @ApiOperation(value="用户加入团队任务，等待人数凑齐",notes = "insert accept, v_group, in_group table")
+    // TODO: websocket
+    @ApiOperation(value="用户加入团队任务，等待人数凑齐",notes = "insert v_group, in_group table")
     @ApiResponses({
             @ApiResponse(code = 200, message = "加入任务成功"),
             @ApiResponse(code = 201, message = "接受任务成功"),
@@ -68,7 +72,11 @@ public class AcceptTaskController {
     })
     @RequestMapping(value = "/submitPersonalTask", method = RequestMethod.PUT)
     public ResponseEntity<Object> submitPersonalTask(@RequestBody SubmitPTaskRequest submitPTaskRequest) {
-        return null;
+        acceptService.submitTask_personal(
+                submitPTaskRequest.getUserId(),
+                submitPTaskRequest.getTaskId(),
+                submitPTaskRequest.getFile());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /** group **/
@@ -79,7 +87,11 @@ public class AcceptTaskController {
     })
     @RequestMapping(value = "/submitGroupTask", method = RequestMethod.PUT)
     public ResponseEntity<Object> submitGroupTask(@RequestBody SubmitGTaskRequest submitGTaskRequest) {
-        return null;
+        vGroupService.submitTask_group(
+                submitGTaskRequest.getGroupId(),
+                submitGTaskRequest.getTaskId(),
+                submitGTaskRequest.getFile());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // TODO: 2022/4/26

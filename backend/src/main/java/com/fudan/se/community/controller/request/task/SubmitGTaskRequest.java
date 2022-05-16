@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class SubmitGTaskRequest {
-    private long groupId;
+    private Integer taskId;
+    private Integer groupId;
     private byte[] file;
 }

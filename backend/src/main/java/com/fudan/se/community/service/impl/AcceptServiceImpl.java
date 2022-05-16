@@ -4,9 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fudan.se.community.exception.BadRequestException;
 import com.fudan.se.community.mapper.AcceptMapper;
 import com.fudan.se.community.pojo.task.Accept;
-import com.fudan.se.community.pojo.task.Task;
+import com.fudan.se.community.vm.Task;
 import com.fudan.se.community.service.AcceptService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fudan.se.community.vm.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,6 @@ public class AcceptServiceImpl extends ServiceImpl<AcceptMapper, Accept> impleme
         // 检查任务是否存在
         Task task = taskService.findTask_id(taskId);
         if (task == null) throw new BadRequestException("Task(taskId="+taskId+") doesn't exists.");
-        // 个人任务 insert accept
         if (task.getTeamSize() == 1) {
             acceptTask_personal(userId, taskId);
         }
@@ -40,6 +40,16 @@ public class AcceptServiceImpl extends ServiceImpl<AcceptMapper, Accept> impleme
 
     }
 
+    @Override
+    public boolean isTaskPersonal(Integer taskId) {
+        // 检查任务是否存在
+        Task task = taskService.findTask_id(taskId);
+        if (task == null) throw new BadRequestException("Task(taskId="+taskId+") doesn't exists.");
+        // 个人任务 insert accept
+        return (task.getTeamSize() == 1);
+    }
+
+    @Override
     public void acceptTask_personal(Integer userId, Integer taskId) {
         // 检查是否已有该任务在进行状态
         Accept accept = baseMapper.selectOne(new QueryWrapper<Accept>().lambda()
@@ -49,6 +59,21 @@ public class AcceptServiceImpl extends ServiceImpl<AcceptMapper, Accept> impleme
         // 个人任务 insert accept
         baseMapper.insert(new Accept(userId, taskId));
     }
+
+    @Override
+    public void acceptTask_group(Integer userId, Integer taskId) {
+    }
+
+    @Override
+    public void submitTask_personal(Integer userId, Integer taskId, byte[] file) {
+        if(!this.update(new Accept(userId, taskId),
+                new QueryWrapper<Accept>().lambda()
+                        .eq(Accept::getProcess, 1)
+                        .eq(Accept::getFile, file)))
+            throw new BadRequestException("User doesn't accept this Personal Task before");
+    }
+
+
 
     public String getTaskProcess(Integer process) {
         String res = "";
@@ -70,7 +95,4 @@ public class AcceptServiceImpl extends ServiceImpl<AcceptMapper, Accept> impleme
         }
         return res;
     }
-
-
-
 }

@@ -1,14 +1,11 @@
 package com.fudan.se.community.controller.task;
 
-import com.fudan.se.community.controller.response.AcceptTaskResponse;
-import com.fudan.se.community.pojo.task.Task;
+import com.fudan.se.community.vm.Task;
 import com.fudan.se.community.service.TaskService;
-import com.fudan.se.community.service.impl.TaskServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +22,18 @@ public class RetrieveInfoController {
     TaskService taskService;
 
     /** TASKS **/
+    @ApiOperation(value="获取taskId对应的任务",notes = "select task table")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = ""),
+            @ApiResponse(code = 400, message = "Task(TaskId=xxx) doesn't exist")
+    })
+
+    @RequestMapping(value = "/retrieveTask/{id}", method = RequestMethod.GET)
+    public ResponseEntity<Object> retrieveTask_id(@PathVariable Integer id) {
+        Task task = taskService.findTask_id(id);
+        return new ResponseEntity<>(task, HttpStatus.OK);
+    }
+
     @ApiOperation(value="获取该课堂所有的任务",notes = "select task table join class_task join v_class")
     @ApiResponses({
             @ApiResponse(code = 200, message = ""),
@@ -46,7 +55,8 @@ public class RetrieveInfoController {
     })
     @RequestMapping(value = "/retrieveTasks/user", method = RequestMethod.GET)
     public ResponseEntity<Map<String, Object>> retrieveTasks_user(@RequestParam Integer userId) {
-        return null;
+        Map<String, Object> map = taskService.retrieveAllTasks_user(userId);
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     // ADMIN // CHECK TASK //
@@ -92,7 +102,7 @@ public class RetrieveInfoController {
     })
     // todo 构造response
     // 想象了一下前端 task/userAccept
-    @RequestMapping(value = "retrieveTasks/unfinishedFree", method = RequestMethod.GET)
+    @RequestMapping(value = "/retrieveTasks/unfinishedFree", method = RequestMethod.GET)
     public ResponseEntity<Map<String, Object>> retrieveTasks_unfinishedFree(@RequestParam Integer userId) {
         return null;
     }

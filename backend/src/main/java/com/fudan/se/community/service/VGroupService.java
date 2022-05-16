@@ -12,5 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2022-04-28
  */
 public interface VGroupService extends IService<VGroup> {
-
+    void submitTask_group(Integer groupId, Integer taskId, byte[] file);
 }

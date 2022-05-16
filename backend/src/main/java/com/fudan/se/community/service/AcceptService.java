@@ -12,5 +12,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2022-04-28
  */
 public interface AcceptService extends IService<Accept> {
-    public void acceptTask(Integer userId, Integer taskId);
+    void acceptTask(Integer userId, Integer taskId);
+    boolean isTaskPersonal(Integer taskId);
+    void acceptTask_personal(Integer userId, Integer taskId);
+    void acceptTask_group(Integer userId,  Integer taskId);
+
+    void submitTask_personal(Integer userId, Integer taskId, byte[] file);
 }

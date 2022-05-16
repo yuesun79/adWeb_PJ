@@ -12,5 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2022-04-28
  */
 public interface InGroupService extends IService<InGroup> {
-
+    public void acceptTask_group(Integer userId, Integer taskId);
 }
