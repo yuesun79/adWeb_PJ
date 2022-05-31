@@ -2,4 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fudan.se.community.mapper.InGroupMapper">
 
+
+    <select id="ifUserAcceptTask_group" resultType="com.fudan.se.community.pojo.task.group.VGroup">
+        SELECT g.*
+        FROM v_group g
+        JOIN in_group r ON r.user_id = #{userId} and r.group_id = g.id
+        WHERE g.task_id = #{taskId}
+    </select>
 </mapper>

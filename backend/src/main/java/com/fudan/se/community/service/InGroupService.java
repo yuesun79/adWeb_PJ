@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface InGroupService extends IService<InGroup> {
     public void acceptTask_group(Integer userId, Integer taskId);
+    void checkUserInGroup(Integer userId, Integer groupId);
 }

@@ -36,12 +36,23 @@ public class Accept implements Serializable {
 
     private Integer process;
 
-    private Blob file;
+    private String file;
+
+    public Accept(Integer process, String file) {
+        this.process = process;
+        this.file = file;
+    }
 
     public Accept(Integer userId, Integer taskId) {
         this.userId = userId;
         this.taskId = taskId;
     }
 
-
+    public Accept(Integer id, Integer userId, Integer taskId, Integer process, String file) {
+        this.id = id;
+        this.userId = userId;
+        this.taskId = taskId;
+        this.process = process;
+        this.file = file;
+    }
 }

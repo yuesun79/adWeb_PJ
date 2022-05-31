@@ -10,8 +10,9 @@ import java.util.List;
 
 @Mapper
 @Repository
-public interface TaskMapper extends BaseMapper<Task> {
+public interface TaskMapper extends BaseMapper<com.fudan.se.community.pojo.task.Task> {
     List<Task> retrieveTask_classId(Integer classId);
     List<Task> retrieveTasks_userId_accept(Integer userId);
     List<GroupTask> retrieveTasks_userId_inGroup(Integer userId);
+    Task findTask_id(Integer taskId);
 }

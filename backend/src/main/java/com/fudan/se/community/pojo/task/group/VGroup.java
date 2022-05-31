@@ -37,10 +37,24 @@ public class VGroup implements Serializable {
 
     private Integer process;
 
-    private Blob file;
+    private String file;
 
-    public VGroup(Integer groupId, Integer taskId) {
-        this.id = groupId;
+
+    public VGroup(Integer process, String file) {
+        this.process = process;
+        this.file = file;
+    }
+
+    public VGroup(Integer taskId) {
         this.taskId = taskId;
+    }
+
+    public VGroup(Integer id, String name, Integer taskId, Integer groupLeader, Integer process, String file) {
+        this.id = id;
+        this.name = name;
+        this.taskId = taskId;
+        this.groupLeader = groupLeader;
+        this.process = process;
+        this.file = file;
     }
 }

@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class AssignGroupInfoRequest {
-    private long taskId;
-    private long groupId;
+    private Integer taskId;
+    private Integer groupId;
     private String name;
-    private long groupLeader;
+    private Integer groupLeader;
 }

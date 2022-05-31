@@ -1,7 +1,7 @@
 package com.fudan.se.community.controller.task;
 
+import com.baomidou.mybatisplus.extension.api.R;
 import com.fudan.se.community.controller.request.task.*;
-import com.fudan.se.community.controller.response.AcceptTaskResponse;
 import com.fudan.se.community.service.AcceptService;
 import com.fudan.se.community.service.VGroupService;
 import io.swagger.annotations.*;
@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Api(tags = "AcceptTaskController")
 @RestController
@@ -26,8 +29,9 @@ public class AcceptTaskController {
     
     @ApiOperation(value="用户接受个人任务",notes = "insert accept table")
     @ApiResponses({
-            @ApiResponse(code = 201, message = "接受任务成功"),
-            @ApiResponse(code = 400, message = "已经接受过该任务")
+            @ApiResponse(code = 200, message = "接受任务成功"),
+            @ApiResponse(code = 400, message = "\"Task(taskId=\"+taskId+\") doesn't exists.\";" +
+                    "\"user(userId=\"+userId+\") has accepted this group task(taskId\"+taskId+\")\"")
     })
     @RequestMapping(value = "/personalTaskOn", method = RequestMethod.POST)
     public ResponseEntity<Object> acceptPersonalTask(
@@ -45,8 +49,10 @@ public class AcceptTaskController {
             @ApiResponse(code = 400, message = "已经接受过该任务")
     })
     @RequestMapping(value = "/groupTaskOn", method = RequestMethod.POST)
-    public @ResponseBody AcceptTaskResponse acceptGroupTask(@RequestBody AcceptTaskRequest acceptTaskRequest) {
-        return null;
+    public @ResponseBody ResponseEntity<Object> acceptGroupTask(@RequestBody AcceptTaskRequest acceptTaskRequest) {
+        acceptService.acceptTask(acceptTaskRequest.getUserId(), acceptTaskRequest.getTaskId());
+     // websocket sendMessage
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation(value="设置组相关信息 组名/组长",notes = "update name/group_leader in v_group table")
@@ -68,14 +74,15 @@ public class AcceptTaskController {
     @ApiOperation(value="提交个人任务",notes = "update process in accept table(task_id)")
     @ApiResponses({
             @ApiResponse(code = 200, message = "已提交"),
-            @ApiResponse(code = 400, message = "该任务不存在")
+            @ApiResponse(code = 400, message = "\"User doesn't accept this Personal Task before\";" +
+                    "\"Task's(TaskId=\"+ taskId +\") ddl has reached\"")
     })
     @RequestMapping(value = "/submitPersonalTask", method = RequestMethod.PUT)
-    public ResponseEntity<Object> submitPersonalTask(@RequestBody SubmitPTaskRequest submitPTaskRequest) {
-        acceptService.submitTask_personal(
-                submitPTaskRequest.getUserId(),
-                submitPTaskRequest.getTaskId(),
-                submitPTaskRequest.getFile());
+    public ResponseEntity<Object> submitPersonalTask(MultipartFile file,
+                                                     HttpServletRequest request,
+                                                     Integer userId,
+                                                     Integer taskId) {
+        acceptService.submitTask_personal(userId, taskId, file, request);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -83,14 +90,16 @@ public class AcceptTaskController {
     @ApiOperation(value="提交团队任务",notes = "update process in group table(group_id)")
     @ApiResponses({
             @ApiResponse(code = 200, message = "已提交"),
-            @ApiResponse(code = 400, message = "该任务不存在")
+            @ApiResponse(code = 400, message = "\"User doesn't accept this Personal Task before\";" +
+                    "\"Task's(TaskId=\"+ taskId +\") ddl has reached\";" +
+                    "\"User(UserId =\"+userId+\") doesn't in this group(groupId=\"+groupId+\")\"")
     })
     @RequestMapping(value = "/submitGroupTask", method = RequestMethod.PUT)
-    public ResponseEntity<Object> submitGroupTask(@RequestBody SubmitGTaskRequest submitGTaskRequest) {
-        vGroupService.submitTask_group(
-                submitGTaskRequest.getGroupId(),
-                submitGTaskRequest.getTaskId(),
-                submitGTaskRequest.getFile());
+    public ResponseEntity<Object> submitGroupTask(MultipartFile file,
+                                                  HttpServletRequest request,
+                                                  Integer userId,
+                                                  Integer groupId) {
+        vGroupService.submitTask_group(userId, groupId, file, request);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

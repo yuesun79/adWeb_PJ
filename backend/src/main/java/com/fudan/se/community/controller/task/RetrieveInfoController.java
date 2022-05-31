@@ -1,5 +1,9 @@
 package com.fudan.se.community.controller.task;
 
+import com.fudan.se.community.controller.response.PersonalTasksMap;
+import com.fudan.se.community.controller.response.TasksResponse;
+import com.fudan.se.community.pojo.user.User;
+import com.fudan.se.community.service.UserService;
 import com.fudan.se.community.vm.Task;
 import com.fudan.se.community.service.TaskService;
 import io.swagger.annotations.Api;
@@ -11,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,42 +24,55 @@ public class RetrieveInfoController {
     @Autowired
     TaskService taskService;
 
+    @Autowired
+    UserService userService;
+
     /** TASKS **/
     @ApiOperation(value="获取taskId对应的任务",notes = "select task table")
     @ApiResponses({
-            @ApiResponse(code = 200, message = ""),
+            @ApiResponse(code = 200, message = "", response = Task.class),
             @ApiResponse(code = 400, message = "Task(TaskId=xxx) doesn't exist")
     })
 
     @RequestMapping(value = "/retrieveTask/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Object> retrieveTask_id(@PathVariable Integer id) {
+    public ResponseEntity<Task> retrieveTask_id(@PathVariable Integer id) {
         Task task = taskService.findTask_id(id);
         return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
     @ApiOperation(value="获取该课堂所有的任务",notes = "select task table join class_task join v_class")
     @ApiResponses({
-            @ApiResponse(code = 200, message = ""),
+            @ApiResponse(code = 200, message = "", response = PersonalTasksMap.class),
             @ApiResponse(code = 400, message = "Class(classId=xxx) doesn't exist")
     })
 
     @RequestMapping(value = "/retrieveTasks/class", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, Object>> retrieveTasks_class(@RequestParam Integer classId) {
-        Map<String, Object> map = new HashMap<>();
+    public ResponseEntity<PersonalTasksMap> retrieveTasks_class(@RequestParam Integer classId) {
         List<Task> list = taskService.retrieveAllTasks_class(classId);
-        map.put("result", list);
-        return new ResponseEntity<>(map, HttpStatus.OK);
+        PersonalTasksMap res = new PersonalTasksMap(list);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @ApiOperation(value="获取某用户所有的任务",notes = "select task table join accept join user")
     @ApiResponses({
-            @ApiResponse(code = 200, message = ""),
-            @ApiResponse(code = 400, message = "userId不对")
+            @ApiResponse(code = 200, message = "", response = TasksResponse.class),
+            @ApiResponse(code = 400, message = "\"This user(userId = \"+ userId + \") doesn't exists\";")
     })
     @RequestMapping(value = "/retrieveTasks/user", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, Object>> retrieveTasks_user(@RequestParam Integer userId) {
-        Map<String, Object> map = taskService.retrieveAllTasks_user(userId);
-        return new ResponseEntity<>(map, HttpStatus.OK);
+    public ResponseEntity<TasksResponse> retrieveTasks_user(Integer userId) {
+        TasksResponse res = taskService.retrieveAllTasks_user(userId);
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    @ApiOperation(value="获取某用户信息",notes = "select user table")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "", response = User.class),
+            @ApiResponse(code = 400, message = "\"User(UserId=\"+userId+\") doesn't exists\"")
+    })
+    @RequestMapping(value = "/retrieveUserInfo", method = RequestMethod.GET)
+    public ResponseEntity<Object> retrieveUserInfo(Integer userId) {
+        User user = userService.retrieveUserInfo(userId);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     // ADMIN // CHECK TASK //

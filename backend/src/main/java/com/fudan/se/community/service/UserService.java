@@ -20,4 +20,6 @@ public interface UserService extends IService<User> {
     String login(LoginDto loginDto);
 
     String isExist(RegisterDto registerDto);
+
+    User retrieveUserInfo(Integer userId);
 }

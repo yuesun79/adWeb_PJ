@@ -2,6 +2,7 @@ package com.fudan.se.community.service.impl;
 
 import com.fudan.se.community.dto.LoginDto;
 import com.fudan.se.community.dto.RegisterDto;
+import com.fudan.se.community.exception.BadRequestException;
 import com.fudan.se.community.pojo.user.User;
 import com.fudan.se.community.mapper.UserMapper;
 import com.fudan.se.community.service.UserService;
@@ -33,8 +34,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             if (ro.getEmail()!=null){
                 user.setEmail(ro.getEmail());
             }
-            if (ro.getPhone_num()!=null){
-                user.setPhone_num(ro.getPhone_num());
+            if (ro.getPhoneNum()!=null){
+                user.setPhoneNum(ro.getPhoneNum());
             }
             userMapper.insert(user);
             return "注册成功";
@@ -61,6 +62,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return "用户名已经存在";
         }
         return "ok";
+    }
+
+    @Override
+    public User retrieveUserInfo(Integer userId) {
+        User user = userMapper.selectById(userId);
+        if (user == null)
+            throw new BadRequestException("User(UserId="+userId+") doesn't exists");
+        else {
+            user.setPassword("");
+            return user;
+        }
     }
 
 

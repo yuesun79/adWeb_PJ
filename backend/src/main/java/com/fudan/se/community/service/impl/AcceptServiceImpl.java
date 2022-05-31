@@ -4,12 +4,20 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fudan.se.community.exception.BadRequestException;
 import com.fudan.se.community.mapper.AcceptMapper;
 import com.fudan.se.community.pojo.task.Accept;
+import com.fudan.se.community.service.InGroupService;
+import com.fudan.se.community.util.FileUtil;
 import com.fudan.se.community.vm.Task;
 import com.fudan.se.community.service.AcceptService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fudan.se.community.vm.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayInputStream;
+import java.sql.Timestamp;
+import java.util.Calendar;
 
 /**
  * <p>
@@ -25,6 +33,9 @@ public class AcceptServiceImpl extends ServiceImpl<AcceptMapper, Accept> impleme
     @Autowired
     TaskServiceImpl taskService;
 
+    @Autowired
+    InGroupService inGroupService;
+
     @Override
     public void acceptTask(Integer userId, Integer taskId) {
         // 检查任务是否存在
@@ -35,12 +46,10 @@ public class AcceptServiceImpl extends ServiceImpl<AcceptMapper, Accept> impleme
         }
         // 团队任务 insert in_group v_group
         else {
-
+            inGroupService.acceptTask_group(userId, taskId);
         }
-
     }
 
-    @Override
     public boolean isTaskPersonal(Integer taskId) {
         // 检查任务是否存在
         Task task = taskService.findTask_id(taskId);
@@ -60,16 +69,21 @@ public class AcceptServiceImpl extends ServiceImpl<AcceptMapper, Accept> impleme
         baseMapper.insert(new Accept(userId, taskId));
     }
 
+    // todo: 管理员修改ddl
+    // todo: 显示/下载已上传文件
     @Override
-    public void acceptTask_group(Integer userId, Integer taskId) {
-    }
-
-    @Override
-    public void submitTask_personal(Integer userId, Integer taskId, byte[] file) {
-        if(!this.update(new Accept(userId, taskId),
+    public void submitTask_personal(Integer userId, Integer taskId, MultipartFile file, HttpServletRequest request) {
+        // check whether is overdue
+        taskService.checkOverDue(taskId);
+        //todo: check upload file in cloud
+        String fileName = FileUtil.upload(file, request);
+        log.debug("--------->filename:"+fileName);
+        // update
+        if(!this.update(
+                new Accept(1, fileName),
                 new QueryWrapper<Accept>().lambda()
-                        .eq(Accept::getProcess, 1)
-                        .eq(Accept::getFile, file)))
+                        .eq(Accept::getUserId, userId)
+                        .eq(Accept::getTaskId, taskId)))
             throw new BadRequestException("User doesn't accept this Personal Task before");
     }
 

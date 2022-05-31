@@ -37,5 +37,11 @@
             ON task.id = G.task_id
         JOIN user ON task.publisher_id = user.id;
     </select>
+    <select id="findTask_id" resultType="com.fudan.se.community.vm.Task">
+        SELECT  task.*, user.username publisherName, user.email publisherEmail, user.phone_num publisherPhone
+        FROM task
+        LEFT JOIN user ON task.publisher_id = user.id
+        WHERE task.id = #{taskId}
+    </select>
 
 </mapper>

@@ -2,12 +2,15 @@ package com.fudan.se.community.pojo.user;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+
+import java.sql.Timestamp;
 import java.util.Date;
 import java.io.Serializable;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -52,7 +55,8 @@ public class User implements Serializable {
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT)
-    private Date register_date;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    private Timestamp registerDate;
 
 
 
@@ -60,8 +64,7 @@ public class User implements Serializable {
      * 环境
      */
     private int ev;
-
-    private String phone_num;
+    private String phoneNum;
 
     private String email;
     public User(){}

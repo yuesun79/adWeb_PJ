@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 @Data
 @ToString
 public class Task {
+    // task + publisher_user
     private Integer id;
     private String name;
     private String description;

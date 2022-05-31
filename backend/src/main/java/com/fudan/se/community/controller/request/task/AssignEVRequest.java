@@ -6,8 +6,8 @@ import java.util.Map;
 
 @Data
 public class AssignEVRequest {
-    private long userId;
-    private long groupId;
+    private Integer userId;
+    private Integer groupId;
     // 试试吧不知道对不对
     private Map<Integer, Integer> score;
 }
