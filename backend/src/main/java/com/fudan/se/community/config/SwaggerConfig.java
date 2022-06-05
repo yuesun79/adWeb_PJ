@@ -15,7 +15,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
-//@EnableWebMvc
+
 // Failed to start bean 'documentationPluginsBootstrapper'; nested exception is java.lang.NullPointerException
 // 可以用另一种方法解决 yml文件配置
 public class SwaggerConfig extends WebMvcConfigurationSupport {
