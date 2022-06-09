@@ -2,6 +2,11 @@ package com.fudan.se.community.service;
 
 import com.fudan.se.community.pojo.task.group.InGroup;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.fudan.se.community.pojo.task.group.VGroup;
+import com.fudan.se.community.pojo.user.User;
+import com.fudan.se.community.vm.GroupTask;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,6 +17,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2022-04-28
  */
 public interface InGroupService extends IService<InGroup> {
-    public void acceptTask_group(Integer userId, Integer taskId);
+    List<VGroup> findGroups_taskId(Integer userId, Integer taskId);
+    Integer acceptTask_group(Integer userId, Integer groupId);
     void checkUserInGroup(Integer userId, Integer groupId);
+
 }

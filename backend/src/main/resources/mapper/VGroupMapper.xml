@@ -2,12 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fudan.se.community.mapper.VGroupMapper">
 
-    <select id="findGroup_taskId" resultType="com.fudan.se.community.vm.GroupTask">
-        SELECT task.team_size, g.*
-        FROM v_group g
-        JOIN task ON task.id = #{taskId} AND g.task_id = task.id
-        LEFT JOIN in_group r ON r.group_id = g.id
-        group by g.id
-        having count(r.id) &lt; task.team_size
+    <select id="findGroup_taskId" resultType="com.fudan.se.community.pojo.task.group.VGroup">
+        SELECT GroupTeam.id, GroupTeam.name,  GroupTeam.task_id, GroupTeam.group_leader,
+        GroupTeam.process, GroupTeam.file
+        FROM (
+            SELECT task.team_size, g.*
+            FROM v_group g
+            JOIN task ON task.id = #{taskId} AND g.task_id = task.id
+            LEFT JOIN in_group r ON r.group_id = g.id
+            group by g.id
+            having count(r.id) &lt; task.team_size
+        ) as GroupTeam
+
     </select>
 </mapper>

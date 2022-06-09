@@ -13,7 +13,9 @@
             {
                 if(ws == null)
                 {
-                    var url = urlPrefix  + $('#id').val();
+                    var url = urlPrefix  + $('#id').val()
+                        + "/" + $('#positionX').val()
+                        + "/" + $('#positionY').val();
                     ws = new WebSocket(url);
                     ws.onopen = function () {
                         // 与服务端建立连接事件
@@ -61,6 +63,9 @@
 </head>
 <body>
 用户ID：<input id="id" value="" /></br>
+positionX：<input id="positionX" value="" /></br>
+positionY：<input id="positionY" value="" /></br>
+
 连接控制：<button id="btnConnect">建立连接</button>
 <button id="btnClose">断开连接</button></br>
 消息内容：<input id="message" value="" />

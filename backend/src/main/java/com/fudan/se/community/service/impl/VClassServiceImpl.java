@@ -7,6 +7,8 @@ import com.fudan.se.community.service.VClassService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务实现类
@@ -24,5 +26,13 @@ public class VClassServiceImpl extends ServiceImpl<VClassMapper, VClass> impleme
         vClassQueryWrapper.lambda()
                 .eq(VClass::getId, classId);
         return getOne(vClassQueryWrapper);
+    }
+
+    @Override
+    public List<VClass> getClasses() {
+        // 查所有VClass @
+        QueryWrapper<VClass> vClassQueryWrapper = new QueryWrapper<>();
+        vClassQueryWrapper.lambda();
+        return baseMapper.selectList(vClassQueryWrapper);
     }
 }

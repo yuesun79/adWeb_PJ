@@ -1,9 +1,14 @@
-package com.fudan.se.community.controller.task;
+package com.fudan.se.community.controller;
 
-import com.baomidou.mybatisplus.extension.api.R;
+import com.fudan.se.community.controller.MessageWSServer;
 import com.fudan.se.community.controller.request.task.*;
+import com.fudan.se.community.controller.response.GTasksMapResponse;
+import com.fudan.se.community.controller.response.TaskMessage;
 import com.fudan.se.community.service.AcceptService;
+import com.fudan.se.community.service.InGroupService;
+import com.fudan.se.community.service.RoomService;
 import com.fudan.se.community.service.VGroupService;
+import com.fudan.se.community.vm.GroupTask;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Api(tags = "AcceptTaskController")
 @RestController
@@ -26,6 +32,9 @@ public class AcceptTaskController {
 
     @Autowired
     VGroupService vGroupService;
+
+    @Autowired
+    InGroupService inGroupService;
     
     @ApiOperation(value="用户接受个人任务",notes = "insert accept table")
     @ApiResponses({
@@ -36,22 +45,40 @@ public class AcceptTaskController {
     @RequestMapping(value = "/personalTaskOn", method = RequestMethod.POST)
     public ResponseEntity<Object> acceptPersonalTask(
             @ApiParam
-            @RequestBody AcceptTaskRequest acceptTaskRequest) {
+            @RequestBody ListGroupTasksRequest acceptTaskRequest) {
         acceptService.acceptTask(acceptTaskRequest.getUserId(), acceptTaskRequest.getTaskId());
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @ApiOperation(value="返回团队任务可以选择的团队",notes = "insert v_group, in_group table")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "", response = GTasksMapResponse.class),
+            @ApiResponse(code = 400, message = "已经接受过该任务")
+    })
+    @RequestMapping(value = "/groupTaskList", method = RequestMethod.POST)
+    public @ResponseBody ResponseEntity<GTasksMapResponse> listGroups(@RequestBody ListGroupTasksRequest request) {
+        Integer userId = request.getUserId();
+        Integer taskId = request.getTaskId();
+        GTasksMapResponse res = new GTasksMapResponse(inGroupService.findGroups_taskId(userId, taskId));
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     // TODO: websocket
     @ApiOperation(value="用户加入团队任务，等待人数凑齐",notes = "insert v_group, in_group table")
     @ApiResponses({
             @ApiResponse(code = 200, message = "加入任务成功"),
-            @ApiResponse(code = 201, message = "接受任务成功"),
             @ApiResponse(code = 400, message = "已经接受过该任务")
     })
     @RequestMapping(value = "/groupTaskOn", method = RequestMethod.POST)
-    public @ResponseBody ResponseEntity<Object> acceptGroupTask(@RequestBody AcceptTaskRequest acceptTaskRequest) {
-        acceptService.acceptTask(acceptTaskRequest.getUserId(), acceptTaskRequest.getTaskId());
-     // websocket sendMessage
+    public @ResponseBody ResponseEntity<Object> acceptGroupTask(@RequestBody AcceptTaskRequest request) {
+        Integer userId = request.getUserId();
+        Integer groupId = request.getGroupId();
+        inGroupService.acceptTask_group(userId, groupId);
+        // get roomId
+        Integer roomId = vGroupService.getRoomId_roomId(groupId);
+        // websocket sendMessage
+        TaskMessage message = new TaskMessage(userId.toString(), "Task status updates", roomId);
+        MessageWSServer.sendMessageFrom(message, roomId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

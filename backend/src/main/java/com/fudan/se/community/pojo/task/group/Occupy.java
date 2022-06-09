@@ -32,5 +32,8 @@ public class Occupy implements Serializable {
 
     private Integer roomId;
 
-
+    public Occupy(Integer groupId, Integer roomId) {
+        this.groupId = groupId;
+        this.roomId = roomId;
+    }
 }

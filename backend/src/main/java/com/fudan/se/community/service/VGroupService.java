@@ -15,5 +15,6 @@ import javax.servlet.http.HttpServletRequest;
  * @since 2022-04-28
  */
 public interface VGroupService extends IService<VGroup> {
+    Integer getRoomId_roomId(Integer groupId);
     void submitTask_group(Integer userId, Integer groupId, MultipartFile file, HttpServletRequest request);
 }

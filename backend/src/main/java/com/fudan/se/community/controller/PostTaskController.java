@@ -1,4 +1,4 @@
-package com.fudan.se.community.controller.task;
+package com.fudan.se.community.controller;
 
 import com.fudan.se.community.controller.request.task.post.CheckGTaskCompleteRequest;
 import com.fudan.se.community.controller.request.task.post.CheckPTaskCompleteRequest;

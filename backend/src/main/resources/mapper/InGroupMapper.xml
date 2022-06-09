@@ -9,4 +9,9 @@
         JOIN in_group r ON r.user_id = #{userId} and r.group_id = g.id
         WHERE g.task_id = #{taskId}
     </select>
+    <select id="getUsersInGroup" resultType="Integer">
+        SELECT user.id
+        FROM user
+        JOIN in_group ON user.id = in_group.user_id and in_group.group_id = #{groupId}
+    </select>
 </mapper>

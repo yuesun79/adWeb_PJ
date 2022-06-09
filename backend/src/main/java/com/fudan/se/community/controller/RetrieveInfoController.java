@@ -1,9 +1,11 @@
-package com.fudan.se.community.controller.task;
+package com.fudan.se.community.controller;
 
-import com.fudan.se.community.controller.response.PersonalTasksMap;
+import com.fudan.se.community.controller.response.ClassResponse;
+import com.fudan.se.community.controller.response.PTasksMapResponse;
 import com.fudan.se.community.controller.response.TasksResponse;
 import com.fudan.se.community.pojo.user.User;
 import com.fudan.se.community.service.UserService;
+import com.fudan.se.community.service.VClassService;
 import com.fudan.se.community.vm.Task;
 import com.fudan.se.community.service.TaskService;
 import io.swagger.annotations.Api;
@@ -27,6 +29,9 @@ public class RetrieveInfoController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    VClassService vClassService;
+
     /** TASKS **/
     @ApiOperation(value="获取taskId对应的任务",notes = "select task table")
     @ApiResponses({
@@ -42,14 +47,14 @@ public class RetrieveInfoController {
 
     @ApiOperation(value="获取该课堂所有的任务",notes = "select task table join class_task join v_class")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "", response = PersonalTasksMap.class),
+            @ApiResponse(code = 200, message = "", response = PTasksMapResponse.class),
             @ApiResponse(code = 400, message = "Class(classId=xxx) doesn't exist")
     })
 
     @RequestMapping(value = "/retrieveTasks/class", method = RequestMethod.GET)
-    public ResponseEntity<PersonalTasksMap> retrieveTasks_class(@RequestParam Integer classId) {
+    public ResponseEntity<PTasksMapResponse> retrieveTasks_class(@RequestParam Integer classId) {
         List<Task> list = taskService.retrieveAllTasks_class(classId);
-        PersonalTasksMap res = new PersonalTasksMap(list);
+        PTasksMapResponse res = new PTasksMapResponse(list);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
@@ -73,6 +78,16 @@ public class RetrieveInfoController {
     public ResponseEntity<Object> retrieveUserInfo(Integer userId) {
         User user = userService.retrieveUserInfo(userId);
         return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @ApiOperation(value="获取课堂信息",notes = "select vClass table")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "", response = ClassResponse.class),
+    })
+    @RequestMapping(value = "/retrieveClasses", method = RequestMethod.GET)
+    public ResponseEntity<ClassResponse> retrieveClass(Integer userId) {
+        ClassResponse res = new ClassResponse(vClassService.getClasses());
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     // ADMIN // CHECK TASK //

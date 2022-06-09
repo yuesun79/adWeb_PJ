@@ -3,8 +3,11 @@ package com.fudan.se.community.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fudan.se.community.exception.BadRequestException;
 import com.fudan.se.community.mapper.InGroupMapper;
+import com.fudan.se.community.mapper.OccupyMapper;
 import com.fudan.se.community.pojo.task.Accept;
 import com.fudan.se.community.pojo.task.group.InGroup;
+import com.fudan.se.community.pojo.task.group.Occupy;
+import com.fudan.se.community.pojo.task.group.Room;
 import com.fudan.se.community.pojo.task.group.VGroup;
 import com.fudan.se.community.mapper.VGroupMapper;
 import com.fudan.se.community.service.InGroupService;
@@ -35,9 +38,19 @@ public class VGroupServiceImpl extends ServiceImpl<VGroupMapper, VGroup> impleme
     InGroupService inGroupService;
     @Autowired
     TaskService taskService;
+    @Autowired
+    OccupyMapper occupyMapper;
 
-    public void acceptTask_group(Integer userId, Integer taskId) {
 
+    @Override
+    public Integer getRoomId_roomId(Integer groupId) {
+        VGroup vGroup = baseMapper.selectById(groupId);
+        if (vGroup == null) {
+            throw new BadRequestException("Group(GroupId="+groupId+") doesn't exist");
+        }
+        Occupy occupy = occupyMapper.selectOne(new QueryWrapper<Occupy>().lambda().eq(Occupy::getGroupId, groupId));
+
+        return occupy.getRoomId();
     }
 
     @Override

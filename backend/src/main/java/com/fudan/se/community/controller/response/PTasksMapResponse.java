@@ -9,6 +9,6 @@ import java.util.Map;
 
 @Data
 @AllArgsConstructor
-public class PersonalTasksMap {
+public class PTasksMapResponse {
     List<Task> result;
 }

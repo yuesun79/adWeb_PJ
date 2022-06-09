@@ -1,8 +1,8 @@
 package com.fudan.se.community.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fudan.se.community.controller.response.OnlineStatusMessage;
 import com.fudan.se.community.controller.response.Message;
+import com.fudan.se.community.controller.response.OnlineStatusMessage;
 import com.fudan.se.community.service.RoomService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,11 +17,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-
-@ServerEndpoint(value = "/ws/community/{sid}/{positionX}/{positionY}")
+@ServerEndpoint(value = "/ws/room/{sid}/{roomId}")
 @Component
-public class WebSocketServer {
-    static Log log = LogFactory.getLog(WebSocketServer.class);
+public class MessageWSServer {
+    static Log log = LogFactory.getLog(MessageWSServer.class);
     static ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
@@ -29,27 +28,27 @@ public class WebSocketServer {
 
     private static int onlineCount = 0;
     // 线程安全Set
-    private static CopyOnWriteArraySet<WebSocketServer> webSocketServers = new CopyOnWriteArraySet<>();
+    private static CopyOnWriteArraySet<MessageWSServer> webSocketServers = new CopyOnWriteArraySet<>();
     private static CopyOnWriteArraySet<String> onLineIds = new CopyOnWriteArraySet<>();
     private Session session;
     private String sid = "";
-    private Integer roomId = 0;
-    private String positionX = "";
-    private String positionY = "";
+    private Integer roomId;
+    private final String positionX = "";
+    private final String positionY = "";
 
     /**
      * 可用来展示在线人数
      * @param session
      * @param sid
      */
+
     @OnOpen
     public void onOpen(Session session, @PathParam("sid")String sid,
-                       @PathParam("positionX")String positionX,
-                       @PathParam("positionY")String positionY) {
+                       @PathParam("roomId")Integer roomId) {
+        log.info("in Message");
         this.session = session;
         this.sid = sid;
-        this.positionX = positionX;
-        this.positionY = positionY;
+        this.roomId = roomId;
         webSocketServers.add(this);
         onLineIds.add(this.sid);
         addOnlineCount();
@@ -57,11 +56,11 @@ public class WebSocketServer {
                 + "-->群发当前在线");
         try {
             // welcome banner
-            sendMessage("hello");
+            sendMessage("hello Room");
             // group online message
             OnlineStatusMessage message = new OnlineStatusMessage(onLineIds, sid, true,
                     positionX, positionY, roomId);
-            sendGroupMessage(message, true);
+            sendGroupMessage(message, this.roomId);
         } catch (IOException e) {
             e.printStackTrace();
             log.error("WebSocket IO 异常");
@@ -79,7 +78,7 @@ public class WebSocketServer {
             // group online message
             OnlineStatusMessage message = new OnlineStatusMessage(onLineIds, this.sid, false,
                     this.positionX, this.positionY, roomId);
-            sendGroupMessage(message, true);
+            sendGroupMessage(message, this.roomId);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -95,7 +94,7 @@ public class WebSocketServer {
         try {
             log.info("来自窗口" + sid + "的群发信息" + message);
             Message uMessage = new Message(this.sid, message, this.roomId);
-            sendGroupMessage(uMessage,false);
+            sendGroupMessage(uMessage, this.roomId);
         } catch (IOException e){
             e.printStackTrace();
         }
@@ -113,28 +112,49 @@ public class WebSocketServer {
     }
 
     // 发送自定义消息
-    public static void sendGroupMessage(Message message, boolean self) throws IOException{
+    public static void sendGroupMessage(Message message, Integer roomId) throws IOException{
         String msg = mapper.writeValueAsString(message);
-            for (WebSocketServer item : webSocketServers) {
+
+        if (roomId == 0) {
+            for (MessageWSServer item : webSocketServers) {
                 try {
                     // 全部推送
-                    if (self | !item.sid.equals(message.getId()))
+                    if (!item.sid.equals(message.getId())) // && item.roomId.equals(roomId)
                         item.sendMessage(msg);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
+        } else {
+            List<Integer> users = WebSocketServer.roomService.findUsersInRoom(roomId);
+            log.info(users);
+            HashSet<Integer> set = new HashSet<>(users);
+            for (MessageWSServer item : webSocketServers) {
+                if (set.contains(Integer.parseInt(item.sid)) && !item.sid.equals(message.getId())) { // && item.roomId.equals(roomId)
+                    log.info("send to" + item.sid);
+                    item.sendMessage(msg);
+                }
+            }
+        }
     }
 
+    public static void sendMessageFrom(Message message, Integer roomId) {
+        try {
+            sendGroupMessage(message, roomId);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
     private static synchronized void subOnlineCount() {
-        WebSocketServer.onlineCount--;
+        MessageWSServer.onlineCount--;
     }
 
     private static synchronized int getOnlineCount() {
-        return WebSocketServer.onlineCount;
+        return MessageWSServer.onlineCount;
     }
 
     private static synchronized void addOnlineCount() {
-        WebSocketServer.onlineCount++;
+        MessageWSServer.onlineCount++;
     }
+
 }

@@ -10,6 +10,7 @@ import com.fudan.se.community.vm.Task;
 import com.fudan.se.community.service.AcceptService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fudan.se.community.vm.Task;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,16 +38,16 @@ public class AcceptServiceImpl extends ServiceImpl<AcceptMapper, Accept> impleme
     InGroupService inGroupService;
 
     @Override
-    public void acceptTask(Integer userId, Integer taskId) {
+    public Integer acceptTask(Integer userId, Integer taskId) {
         // 检查任务是否存在
         Task task = taskService.findTask_id(taskId);
         if (task == null) throw new BadRequestException("Task(taskId="+taskId+") doesn't exists.");
         if (task.getTeamSize() == 1) {
-            acceptTask_personal(userId, taskId);
+            return acceptTask_personal(userId, taskId);
         }
         // 团队任务 insert in_group v_group
         else {
-            inGroupService.acceptTask_group(userId, taskId);
+            return inGroupService.acceptTask_group(userId, taskId);
         }
     }
 
@@ -59,14 +60,17 @@ public class AcceptServiceImpl extends ServiceImpl<AcceptMapper, Accept> impleme
     }
 
     @Override
-    public void acceptTask_personal(Integer userId, Integer taskId) {
+    public Integer acceptTask_personal(Integer userId, Integer taskId) {
         // 检查是否已有该任务在进行状态
         Accept accept = baseMapper.selectOne(new QueryWrapper<Accept>().lambda()
                 .eq(Accept::getTaskId, taskId)
                 .eq(Accept::getUserId, userId));
         if (accept != null) throw new BadRequestException("User already accept this personal Task, process:"+ getTaskProcess(accept.getProcess()));
         // 个人任务 insert accept
-        baseMapper.insert(new Accept(userId, taskId));
+        Accept accept1 = new Accept(userId, taskId);
+        baseMapper.insert(accept1);
+
+        return accept1.getId();
     }
 
     // todo: 管理员修改ddl
