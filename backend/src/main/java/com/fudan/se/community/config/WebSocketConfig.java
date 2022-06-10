@@ -19,8 +19,7 @@ public class WebSocketConfig {
     }
 
     @Autowired
-    public void setRoomService(RoomService roomService) {
-        WebSocketServer.roomService = roomService;
+    public void setRoomService(RoomService roomService) { WebSocketServer.roomService = roomService;
     }
 
 //    @Override

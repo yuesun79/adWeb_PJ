@@ -2,6 +2,7 @@ package com.fudan.se.community.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -14,8 +15,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
-@EnableSwagger2
-
+@EnableWebMvc
 // Failed to start bean 'documentationPluginsBootstrapper'; nested exception is java.lang.NullPointerException
 // 可以用另一种方法解决 yml文件配置
 public class SwaggerConfig extends WebMvcConfigurationSupport {
@@ -56,5 +56,4 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
                 .licenseUrl("http://www.baidu.com")
                 .build();
     }
-
 }
