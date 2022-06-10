@@ -48,33 +48,24 @@ public class TokenInterceptor implements HandlerInterceptor {
             if (passToken.required()) {
                 return true;
             }
-        }
-
-        System.out.println(method.isAnnotationPresent(UserLoginToken.class));
-        // 检查该方法是否有 UserLoginToken 权限的注解
-        if (method.isAnnotationPresent(UserLoginToken.class)) {
-            UserLoginToken annotation = method.getAnnotation(UserLoginToken.class);
-            if (annotation.required()) {
-                response.setCharacterEncoding("UTF-8");
-
-                String token = request.getHeader("token");
-                System.out.println(token);
-                if (token != null) {
-                    System.out.println("TOKEN is"+token);
-                    boolean result = TokenUtil.verify(token);
-                    if (result) {
-                        log.info("TOKEN 验证通过，TokenInterceptor拦截器放行");
-                        return true;
-                    }
+        }else {
+            response.setCharacterEncoding("UTF-8");
+            String token = request.getHeader("token");
+            System.out.println(token);
+            if (token != null) {
+                System.out.println("TOKEN is"+token);
+                boolean result = TokenUtil.verify(token);
+                if (result) {
+                    log.info("TOKEN 验证通过，TokenInterceptor拦截器放行");
+                    return true;
                 }
             }
         }
-
+        // 否则不通过，验证失败
         response.setContentType("application/json;charset=utf8");
-
         try {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("message", "token verify fail");
+            jsonObject.put("message", "token verify fail or token missing");
             jsonObject.put("code", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().append(jsonObject.toString());
             response.setStatus(500);
@@ -84,8 +75,6 @@ public class TokenInterceptor implements HandlerInterceptor {
             log.error(e.getMessage());
             return false;
         }
-
-        //判断 用户是否存在等等
         return false;
     }
 }

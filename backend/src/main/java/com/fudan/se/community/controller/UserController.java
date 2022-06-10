@@ -42,7 +42,7 @@ public class UserController {
      * 用户注册
      */
     @RequestMapping("/register")//@Validated
-
+    @PassToken
     public CommonResult register( @RequestBody RegisterDto registerDto){
         log.info(registerDto.toString());
 
@@ -79,7 +79,6 @@ public class UserController {
     }
 
     @RequestMapping  ("/info")
-    @UserLoginToken(required = true)
     public String getInfo(){
         return "Token success";
     }
