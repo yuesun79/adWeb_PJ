@@ -36,7 +36,8 @@ public class AcceptTaskController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "接受任务成功"),
             @ApiResponse(code = 400, message = "\"Task(taskId=\"+taskId+\") doesn't exists.\";" +
-                    "\"user(userId=\"+userId+\") has accepted this group task(taskId\"+taskId+\")\"")
+                    "\"user(userId=\"+userId+\") has accepted this group task(taskId\"+taskId+\")\"" +
+                    ";\"Task(taskId=\"+taskId+\") is group task\"")
     })
     @RequestMapping(value = "/personalTaskOn", method = RequestMethod.POST)
     public ResponseEntity<Object> acceptPersonalTask(
@@ -49,7 +50,8 @@ public class AcceptTaskController {
     @ApiOperation(value="返回团队任务可以选择的团队",notes = "insert v_group, in_group table")
     @ApiResponses({
             @ApiResponse(code = 200, message = "", response = GTasksMapResponse.class),
-            @ApiResponse(code = 400, message = "已经接受过该任务")
+            @ApiResponse(code = 400, message = "\"Task(taskId=\"+taskId+\") is personal task\"" +
+                    ";\"user(userId=\"+userId+\") has accepted this group task(taskId\"+taskId+\")\"")
     })
     @RequestMapping(value = "/groupTaskList", method = RequestMethod.POST)
     public @ResponseBody ResponseEntity<GTasksMapResponse> listGroups(@RequestBody ListGroupTasksRequest request) {
