@@ -35,7 +35,7 @@ public class TokenUtil {
     }
 
     /**
-     * 签名验证
+     * token验证
      * @param token
      * @return
      */
@@ -48,6 +48,7 @@ public class TokenUtil {
             System.out.println("过期时间：      " + jwt.getExpiresAt());
             return true;
         } catch (Exception e){
+            System.out.println("token验证不成功。");
             return false;
         }
     }

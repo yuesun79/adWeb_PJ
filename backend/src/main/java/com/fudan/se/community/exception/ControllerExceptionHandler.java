@@ -24,8 +24,8 @@ public class ControllerExceptionHandler {
         response.put("message", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-//    //    403
-//    @ExceptionHandler(BadCredentialsException.class)
+   //500
+    //@ExceptionHandler(TokenFail.class)
 //    public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException ex) {
 //        Map<String, String> response = new HashMap<>();
 //        response.put("message", ex.getMessage());
