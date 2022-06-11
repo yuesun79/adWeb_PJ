@@ -43,7 +43,6 @@ public class UserController {
      * 用户注册
      */
     @RequestMapping("/register")//@Validated
-    @PassToken
     public ResponseEntity<String> register(@RequestBody RegisterDto registerDto){
         log.info(registerDto.toString());
 
@@ -60,7 +59,6 @@ public class UserController {
      * 用户登录
      */
     @RequestMapping("/login")
-    @PassToken
     public ResponseEntity<String> login(@RequestBody LoginDto loginDto) throws JSONException {
         log.info(loginDto.toString());
 
