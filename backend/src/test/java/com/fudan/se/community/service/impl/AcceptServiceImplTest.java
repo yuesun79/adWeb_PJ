@@ -16,7 +16,7 @@ class AcceptServiceImplTest {
     @Test
     @Transactional
     public void acceptTask_personal() {
-        acceptService.acceptTask(1, 3);
+        acceptService.acceptTask_personal(1, 3);
     }
 
 }

@@ -14,7 +14,7 @@ public interface TaskService extends IService<com.fudan.se.community.pojo.task.T
 
     Task findTask_id(Integer taskId);
 
-    public void checkOverDue(Integer taskId);
+    void checkOverDue(Integer taskId);
 
     void insertTask(com.fudan.se.community.pojo.task.Task task);
 

@@ -15,7 +15,10 @@ import com.fudan.se.community.pojo.user.User;
 import com.fudan.se.community.service.InGroupService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fudan.se.community.service.RoomService;
+import com.fudan.se.community.service.VGroupService;
 import com.fudan.se.community.vm.GroupTask;
+import com.fudan.se.community.vm.Task;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,18 +32,34 @@ import java.util.List;
  * @author SY
  * @since 2022-04-28
  */
+@Slf4j
 @Service
 public class InGroupServiceImpl extends ServiceImpl<InGroupMapper, InGroup> implements InGroupService {
 
     @Autowired
+    TaskServiceImpl taskService;
+    @Autowired
     VGroupMapper vGroupMapper;
+    @Autowired
+    VGroupService vGroupService;
     @Autowired
     RoomMapper roomMapper;
     @Autowired
     OccupyMapper occupyMapper;
 
     @Override
+    public boolean isTaskPersonal(Integer taskId) {
+        // 检查任务是否存在
+        Task task = taskService.findTask_id(taskId);
+        if (task == null) throw new BadRequestException("Task(taskId="+taskId+") doesn't exists.");
+        // 个人任务 insert accept
+        return (task.getTeamSize() == 1);
+    }
+
+    @Override
     public List<VGroup> findGroups_taskId(Integer userId, Integer taskId) {
+        if (isTaskPersonal(taskId))
+            throw new BadRequestException("Task(taskId="+taskId+") is personal task");
         // in_group 是否已经接受过该任务
         VGroup group = baseMapper.ifUserAcceptTask_group(userId, taskId);
         if (group != null) {
@@ -65,24 +84,27 @@ public class InGroupServiceImpl extends ServiceImpl<InGroupMapper, InGroup> impl
 
     @Override
     public Integer acceptTask_group(Integer userId, Integer groupId) {
-        VGroup vGroup = vGroupMapper.selectById(groupId);
-        if (groupId == null)
-            throw new BadRequestException("Group(GroupId="+groupId+")doesn't exist");
+        // 判断人数是否已满
+        Integer teamSize = vGroupService.getTask_groupId(groupId).getTeamSize();
+
+        VGroup vGroup = vGroupMapper.selectOne(new QueryWrapper<VGroup>()
+                .lambda().eq(VGroup::getId, groupId)
+                .lt(VGroup::getProcess, teamSize)); // VGroup::getProcess小于
+        if (vGroup == null) {
+            throw new BadRequestException("Group(GroupId="+groupId+")doesn't exist or already has enough people");
+        }
+        // 判断是否已经在组中
         // insert in_group
         InGroup inGroup = new InGroup(userId, groupId);
+        if (baseMapper.selectOne(new QueryWrapper<>(inGroup)) != null) {
+            throw new BadRequestException("User(userId="+userId+") already in group(groupId="+groupId+")");
+        }
         baseMapper.insert(inGroup);
         // update memberNum
-        vGroupMapper.update(new VGroup(groupId), new QueryWrapper<VGroup>()
-                .lambda().eq(VGroup::getProcess,vGroup.getProcess()+1));
+        vGroup.setProcess(vGroup.getProcess()+1);
+        vGroupMapper.update(vGroup, new QueryWrapper<VGroup>()
+                .lambda().eq(VGroup::getId,vGroup.getId()));
         return inGroup.getId();
     }
 
-    @Override
-    public void checkUserInGroup(Integer userId, Integer groupId) {
-        if (baseMapper.selectOne(new QueryWrapper<InGroup>().
-                lambda()
-                .eq(InGroup::getGroupId, groupId)
-                .eq(InGroup::getUserId, userId)) == null)
-            throw new BadRequestException("User(UserId ="+userId+") doesn't in this group(groupId="+groupId+")");
-    }
 }

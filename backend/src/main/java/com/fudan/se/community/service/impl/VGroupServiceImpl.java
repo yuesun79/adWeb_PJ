@@ -5,6 +5,7 @@ import com.fudan.se.community.exception.BadRequestException;
 import com.fudan.se.community.mapper.InGroupMapper;
 import com.fudan.se.community.mapper.OccupyMapper;
 import com.fudan.se.community.pojo.task.Accept;
+import com.fudan.se.community.pojo.task.Task;
 import com.fudan.se.community.pojo.task.group.InGroup;
 import com.fudan.se.community.pojo.task.group.Occupy;
 import com.fudan.se.community.pojo.task.group.Room;
@@ -16,6 +17,7 @@ import com.fudan.se.community.service.VGroupService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fudan.se.community.util.FileUtil;
 import io.swagger.models.auth.In;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,12 +32,11 @@ import javax.servlet.http.HttpServletRequest;
  * @author SY
  * @since 2022-04-28
  */
+@Slf4j
 @Service
 public class VGroupServiceImpl extends ServiceImpl<VGroupMapper, VGroup> implements VGroupService {
     @Autowired
     InGroupMapper inGroupMapper;
-    @Autowired
-    InGroupService inGroupService;
     @Autowired
     TaskService taskService;
     @Autowired
@@ -43,7 +44,7 @@ public class VGroupServiceImpl extends ServiceImpl<VGroupMapper, VGroup> impleme
 
 
     @Override
-    public Integer getRoomId_roomId(Integer groupId) {
+    public Integer getRoomId_groupId(Integer groupId) {
         VGroup vGroup = baseMapper.selectById(groupId);
         if (vGroup == null) {
             throw new BadRequestException("Group(GroupId="+groupId+") doesn't exist");
@@ -56,7 +57,7 @@ public class VGroupServiceImpl extends ServiceImpl<VGroupMapper, VGroup> impleme
     @Override
     public void submitTask_group(Integer userId, Integer groupId, MultipartFile file, HttpServletRequest request) {
         // check whether in group
-        inGroupService.checkUserInGroup(userId, groupId);
+        checkUserInGroup(userId, groupId);
         // check whether overdue
         VGroup vGroup = baseMapper.selectById(groupId);
         taskService.checkOverDue(vGroup.getTaskId());
@@ -68,5 +69,21 @@ public class VGroupServiceImpl extends ServiceImpl<VGroupMapper, VGroup> impleme
                 new QueryWrapper<VGroup>().lambda()
                         .eq(VGroup::getId, groupId)))
             throw new BadRequestException("User doesn't accept this Group Task before");
+    }
+
+    @Override
+    public Task getTask_groupId(Integer groupId) {
+        VGroup vGroup = baseMapper.selectById(groupId);
+        log.info("Task--:"+taskService.getById(vGroup.getTaskId()).toString());
+        return taskService.getById(vGroup.getTaskId());
+    }
+
+    @Override
+    public void checkUserInGroup(Integer userId, Integer groupId) {
+        if (inGroupMapper.selectOne(new QueryWrapper<InGroup>().
+                lambda()
+                .eq(InGroup::getGroupId, groupId)
+                .eq(InGroup::getUserId, userId)) == null)
+            throw new BadRequestException("User(UserId ="+userId+") doesn't in this group(groupId="+groupId+")");
     }
 }

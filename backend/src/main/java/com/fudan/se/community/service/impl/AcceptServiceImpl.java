@@ -37,30 +37,11 @@ public class AcceptServiceImpl extends ServiceImpl<AcceptMapper, Accept> impleme
     @Autowired
     InGroupService inGroupService;
 
-    @Override
-    public Integer acceptTask(Integer userId, Integer taskId) {
-        // 检查任务是否存在
-        Task task = taskService.findTask_id(taskId);
-        if (task == null) throw new BadRequestException("Task(taskId="+taskId+") doesn't exists.");
-        if (task.getTeamSize() == 1) {
-            return acceptTask_personal(userId, taskId);
-        }
-        // 团队任务 insert in_group v_group
-        else {
-            return inGroupService.acceptTask_group(userId, taskId);
-        }
-    }
-
-    public boolean isTaskPersonal(Integer taskId) {
-        // 检查任务是否存在
-        Task task = taskService.findTask_id(taskId);
-        if (task == null) throw new BadRequestException("Task(taskId="+taskId+") doesn't exists.");
-        // 个人任务 insert accept
-        return (task.getTeamSize() == 1);
-    }
 
     @Override
     public Integer acceptTask_personal(Integer userId, Integer taskId) {
+        if (!inGroupService.isTaskPersonal(taskId))
+            throw new BadRequestException("Task(taskId="+taskId+") is group task");
         // 检查是否已有该任务在进行状态
         Accept accept = baseMapper.selectOne(new QueryWrapper<Accept>().lambda()
                 .eq(Accept::getTaskId, taskId)

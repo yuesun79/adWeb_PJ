@@ -58,15 +58,14 @@ public class User implements Serializable {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Timestamp registerDate;
 
-
-
     /**
      * 环境
      */
     private int ev;
     private String phoneNum;
-
     private String email;
+    private String status;
+
     public User(){}
     public User(String username, String s) {
         this.username=username;

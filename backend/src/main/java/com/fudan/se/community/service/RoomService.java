@@ -16,6 +16,6 @@ import java.util.List;
  */
 public interface RoomService extends IService<Room> {
     Integer getGroupId_roomId(Integer roomId);
-    List<Integer> findUsersInRoom(Integer roomId);
-
+    List<User> findUsersInRoom(Integer roomId);
+    Integer getTeamSize_roomId(Integer roomId);
 }

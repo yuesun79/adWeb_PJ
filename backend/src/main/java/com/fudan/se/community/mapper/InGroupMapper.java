@@ -22,5 +22,5 @@ import java.util.List;
 @Repository
 public interface InGroupMapper extends BaseMapper<InGroup> {
     VGroup ifUserAcceptTask_group(Integer userId, Integer taskId);
-    List<Integer> getUsersInGroup(Integer groupId);
+    List<User> getUsersInGroup(Integer groupId);
 }
