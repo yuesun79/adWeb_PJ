@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,12 +44,12 @@ public class UserController {
      */
     @RequestMapping("/register")//@Validated
     @PassToken
-    public CommonResult register( @RequestBody RegisterDto registerDto){
+    public ResponseEntity<String> register(@RequestBody RegisterDto registerDto){
         log.info(registerDto.toString());
 
         String obj = userService.register(registerDto);
         if(obj.equals("注册成功")){
-            return CommonResult.success(obj);
+            return new ResponseEntity<>(obj,HttpStatus.OK);
         }else{
             throw new BadRequestException(obj);
         }
@@ -60,7 +61,7 @@ public class UserController {
      */
     @RequestMapping("/login")
     @PassToken
-    public CommonResult login(@RequestBody LoginDto loginDto) throws JSONException {
+    public ResponseEntity<String> login(@RequestBody LoginDto loginDto) throws JSONException {
         log.info(loginDto.toString());
 
         String ans = userService.login(loginDto);
@@ -73,7 +74,7 @@ public class UserController {
             HashMap<String,Object> hs =new HashMap<>();
             hs.put("token",token);
             hs.put("userid",user.getId());
-            return new CommonResult(String.valueOf(HttpStatus.OK.value()),"成功",hs);
+            return new ResponseEntity<>(token,HttpStatus.OK);
         }
         throw new BadRequestException(ans);
     }

@@ -30,7 +30,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String ans = istrue(ro);
         if(ans.equals("OK")){
             User user = new User();
-            user.setUsername(ro.getUsername());user.setPassword(MD5Utils.code(ro.getPassword()));
+            user.setUsername(ro.getUsername());
+            user.setPassword(MD5Utils.code(ro.getPassword()));
+            user.setGender(ro.getGender());
+            user.setPhoneNum(ro.getPhoneNum());
+            user.setEmail(ro.getEmail());
             if (ro.getEmail()!=null){
                 user.setEmail(ro.getEmail());
             }
