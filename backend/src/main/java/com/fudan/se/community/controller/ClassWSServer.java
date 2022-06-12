@@ -13,7 +13,7 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-@ServerEndpoint(value = "/ws/class/{sid}/{positionX}/{positionY}")
+@ServerEndpoint(value = "/ws/class/{sid}/{classId}/{positionX}/{positionY}")
 @Component
 public class ClassWSServer{
     static Log log = LogFactory.getLog(WebSocketServer.class);
@@ -29,6 +29,7 @@ public class ClassWSServer{
     private Integer roomId = 0;
     private String positionX = "";
     private String positionY = "";
+    private Integer classId;
 
     /**
      * 可用来展示在线人数
@@ -36,13 +37,16 @@ public class ClassWSServer{
      * @param sid
      */
     @OnOpen
-    public void onOpen(Session session, @PathParam("sid")Integer sid,
+    public void onOpen(Session session,
+                       @PathParam("sid")Integer sid,
                        @PathParam("positionX")String positionX,
-                       @PathParam("positionY")String positionY) {
+                       @PathParam("positionY")String positionY,
+                       @PathParam("classId")Integer classId) {
         this.session = session;
         this.sid = sid;
         this.positionX = positionX;
         this.positionY = positionY;
+        this.classId = classId;
         webSocketServers.add(this);
         onLineIds.add(this.sid);
         addOnlineCount();
@@ -52,9 +56,9 @@ public class ClassWSServer{
             // welcome banner
             sendMessage("hello");
             // group online message
-            OnlineStatusMessage message = new OnlineStatusMessage(onLineIds, sid, "online",
+            OnlineStatusMessage message = new OnlineStatusMessage(getPeopleInClass(classId), sid, "online",
                     positionX, positionY);
-            sendGroupMessage(message, true);
+            sendGroupMessage(message, classId, true);
         } catch (IOException e) {
             e.printStackTrace();
             log.error("WebSocket IO 异常");
@@ -68,14 +72,10 @@ public class ClassWSServer{
         subOnlineCount();
         log.info(this.sid + "关闭连接 当前在线人数为" + getOnlineCount());
 
-        try {
-            // group online message
-            OnlineStatusMessage message = new OnlineStatusMessage(onLineIds, this.sid, "offline",
-                    this.positionX, this.positionY);
-            sendGroupMessage(message, true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // group online message
+        OnlineStatusMessage message = new OnlineStatusMessage(getPeopleInClass(classId), this.sid, "offline",
+                this.positionX, this.positionY);
+        sendGroupMessage(message, classId, true);
 
     }
 
@@ -85,13 +85,9 @@ public class ClassWSServer{
      */
     @OnMessage
     public void onMessage(String message) {
-        try {
-            log.info("来自窗口" + sid + "的群发信息" + message);
-            Message uMessage = new Message(this.sid, message);
-            sendGroupMessage(uMessage,false);
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+        log.info("来自窗口" + sid + "的群发信息" + message);
+        Message uMessage = new Message(this.sid, message);
+        sendGroupMessage(uMessage,classId,false);
     }
 
     @OnError
@@ -105,18 +101,33 @@ public class ClassWSServer{
         this.session.getBasicRemote().sendText(message);
     }
 
+    public void sendMessage(Message message) throws IOException {
+        String sUsername = MessageWSServer.userService.retrieveUserInfo(message.getSid()).getUsername();
+        message.setSUsername(sUsername);
+        this.session.getBasicRemote().sendText(mapper.writeValueAsString(message));
+    }
+
     // 发送自定义消息
-    public static void sendGroupMessage(Message message, boolean self) throws IOException{
-        String msg = mapper.writeValueAsString(message);
+    public static void sendGroupMessage(Message message,  Integer classId,  boolean self) {
         for (ClassWSServer item : webSocketServers) {
             try {
                 // 全部推送
-                if (self | !item.sid.equals(message.getSid()))
-                    item.sendMessage(msg);
+                if (item.classId.equals(classId) && (self | !item.sid.equals(message.getSid())) )
+                    item.sendMessage(message);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private CopyOnWriteArraySet<Integer> getPeopleInClass(Integer classId) {
+        CopyOnWriteArraySet<Integer> res = new CopyOnWriteArraySet<>();
+        for (ClassWSServer server : webSocketServers) {
+            if (server.classId.equals(classId)) {
+                res.add(server.sid);
+            }
+        }
+        return res;
     }
 
     private static synchronized void subOnlineCount() {

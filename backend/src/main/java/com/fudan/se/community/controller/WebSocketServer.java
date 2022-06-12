@@ -107,14 +107,20 @@ public class WebSocketServer {
         this.session.getBasicRemote().sendText(message);
     }
 
+    public void sendMessage(Message message) throws IOException {
+        String sUsername = MessageWSServer.userService.retrieveUserInfo(message.getSid()).getUsername();
+        message.setSUsername(sUsername);
+        this.session.getBasicRemote().sendText(mapper.writeValueAsString(message));
+    }
+
     // 发送自定义消息
     public static void sendGroupMessage(Message message, boolean self) throws IOException{
-        String msg = mapper.writeValueAsString(message);
+
             for (WebSocketServer item : webSocketServers) {
                 try {
                     // 全部推送
                     if (self | !item.sid.equals(message.getSid()))
-                        item.sendMessage(msg);
+                        item.sendMessage(message);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
