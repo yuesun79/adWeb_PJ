@@ -17,7 +17,7 @@ public class MyMataObjectHandler implements MetaObjectHandler {
     public void insertFill(MetaObject metaObject) {
         //设置每次插入的时候更新 创建时间和更新时间 也就是初始化时间
         this.setFieldValByName("register_date",new Date(),metaObject);
-
+         log.info(new Date().toString());
     }
 
     @Override

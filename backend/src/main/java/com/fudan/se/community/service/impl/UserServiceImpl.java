@@ -11,6 +11,10 @@ import com.fudan.se.community.util.MD5Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * <p>
  *  服务实现类
@@ -33,13 +37,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             user.setUsername(ro.getUsername());
             user.setPassword(MD5Utils.code(ro.getPassword()));
             user.setGender(ro.getGender());
-            user.setPhoneNum(ro.getPhoneNum());
-            user.setEmail(ro.getEmail());
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            String time= df.format(new Date());
+
+            Timestamp ts= Timestamp.valueOf(time);
+            user.setRegisterDate(ts);
+            System.out.println("--------------"+user.getRegisterDate());
             if (ro.getEmail()!=null){
                 user.setEmail(ro.getEmail());
             }
-            if (ro.getPhoneNum()!=null){
-                user.setPhoneNum(ro.getPhoneNum());
+            if (ro.getPhone_num()!=null){
+                user.setPhoneNum(ro.getPhone_num());
             }
             userMapper.insert(user);
             return "注册成功";

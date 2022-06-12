@@ -66,7 +66,7 @@ public class TokenInterceptor implements HandlerInterceptor {
             jsonObject.put("message", "token verify fail or token missing");
             jsonObject.put("code", HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().append(jsonObject.toString());
-            response.setStatus(500);
+            response.setStatus(401);
             response.setContentType("token verify fail");
             log.info("验证失败，未通过TokenInterceptor拦截器");
         } catch (Exception e) {
