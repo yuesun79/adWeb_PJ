@@ -6,9 +6,9 @@ spring:
   #数据库配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/adweb_user  #communityDB
+    url: jdbc:mysql://localhost:3306/communityDB
     username: root #
-    password: root #100279Sy
+    password: 100279Sy
 #    Springfox使用的路径匹配是基于AntPathMatcher的，而Spring Boot 2.6.X使用的是PathPatternMatcher。
   mvc:
     pathmatch:

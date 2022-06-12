@@ -20,5 +20,5 @@ public interface VGroupService extends IService<VGroup> {
     void submitTask_group(Integer userId, Integer groupId, MultipartFile file, HttpServletRequest request);
     Task getTask_groupId(Integer groupId);
     void checkUserInGroup(Integer userId, Integer groupId);
-
+    void updateGroupInfo(Integer groupId, Integer groupLeader, String name);
 }

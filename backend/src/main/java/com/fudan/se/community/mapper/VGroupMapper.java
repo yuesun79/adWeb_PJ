@@ -11,5 +11,6 @@ import java.util.List;
 @Mapper
 @Repository
 public interface VGroupMapper extends BaseMapper<VGroup> {
-    List<VGroup> findGroup_taskId(Integer taskId);
+    List<VGroup> findGroups_taskId(Integer taskId);
+    VGroup findGroup_userIdAndTaskId(Integer userId, Integer taskId);
 }

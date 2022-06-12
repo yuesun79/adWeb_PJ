@@ -57,6 +57,15 @@ public class InGroupServiceImpl extends ServiceImpl<InGroupMapper, InGroup> impl
     }
 
     @Override
+    public Integer findRoomId_userIdAndTaskId(Integer userId, Integer taskId) {
+        VGroup vGroup = vGroupMapper.findGroup_userIdAndTaskId(userId, taskId);
+        if (vGroup == null)
+            throw new BadRequestException("There isn't any group user(userId="+userId+") with this task" +
+                    "(taskId"+taskId+")");
+        return vGroupService.getRoomId_groupId(vGroup.getId());
+    }
+
+    @Override
     public List<VGroup> findGroups_taskId(Integer userId, Integer taskId) {
         if (isTaskPersonal(taskId))
             throw new BadRequestException("Task(taskId="+taskId+") is personal task");
@@ -66,7 +75,7 @@ public class InGroupServiceImpl extends ServiceImpl<InGroupMapper, InGroup> impl
             throw new BadRequestException("user(userId="+userId+") has accepted this group task(taskId"+taskId+")");
         }
         // 寻找是否有该任务对应的未满team_size的group
-        List<VGroup> oldGroup = vGroupMapper.findGroup_taskId(taskId);
+        List<VGroup> oldGroup = vGroupMapper.findGroups_taskId(taskId);
         // 不存在 insert v_group
         Room room = new Room();
         if (oldGroup.size() == 0) {
@@ -76,7 +85,7 @@ public class InGroupServiceImpl extends ServiceImpl<InGroupMapper, InGroup> impl
             roomMapper.insert(room);
             occupyMapper.insert(new Occupy(group1.getId(), room.getId()));
 
-            oldGroup = vGroupMapper.findGroup_taskId(taskId);
+            oldGroup = vGroupMapper.findGroups_taskId(taskId);
 
         }
         return oldGroup;

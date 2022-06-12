@@ -24,7 +24,7 @@ public class CrossConfig {
 
         corsConfiguration.addAllowedOrigin("http://localhost");  //允许的域名访问
         corsConfiguration.addAllowedOrigin("http://localhost:8080");  //允许的域名访问
-        corsConfiguration.addAllowedOrigin("http://localhost:63342");  //允许的域名访问
+        corsConfiguration.addAllowedOrigin("http://localhost:4200");  //允许的域名访问
         corsConfiguration.addAllowedOrigin("http://106.15.170.212"); //允许的域名访问
         corsConfiguration.addAllowedHeader("*");  //允许所有请求头
         corsConfiguration.addAllowedMethod("*");  //允许所有的请求类型

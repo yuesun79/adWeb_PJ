@@ -1,5 +1,6 @@
 package com.fudan.se.community.controller;
 
+import com.fudan.se.community.annotation.PassToken;
 import com.fudan.se.community.controller.request.task.*;
 import com.fudan.se.community.controller.response.GTasksMapResponse;
 import com.fudan.se.community.pojo.message.TaskMessage;
@@ -84,11 +85,14 @@ public class AcceptTaskController {
     @ApiOperation(value="设置组相关信息 组名/组长",notes = "update name/group_leader in v_group table")
     @ApiResponses({
             @ApiResponse(code = 200, message = "组名/组长设置成功"),
-            @ApiResponse(code = 400, message = "该组不存在")
+            @ApiResponse(code = 400, message = "\"User(UserId =\"+userId+\") doesn't in this group(groupId=\"+groupId+\")\"")
     })
     @RequestMapping(value = "/assignGroupInfo", method = RequestMethod.PUT)
     public ResponseEntity<Object> assignGroupInfo(@RequestBody AssignGroupInfoRequest assignGroupInfoRequest) {
-        return null;
+        vGroupService.updateGroupInfo(assignGroupInfoRequest.getGroupId(),
+                assignGroupInfoRequest.getGroupLeader(),
+                assignGroupInfoRequest.getName());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /** submit **/

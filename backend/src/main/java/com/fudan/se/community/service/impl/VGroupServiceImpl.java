@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fudan.se.community.exception.BadRequestException;
 import com.fudan.se.community.mapper.InGroupMapper;
 import com.fudan.se.community.mapper.OccupyMapper;
+import com.fudan.se.community.mapper.UserMapper;
 import com.fudan.se.community.pojo.task.Accept;
 import com.fudan.se.community.pojo.task.Task;
 import com.fudan.se.community.pojo.task.group.InGroup;
@@ -85,5 +86,17 @@ public class VGroupServiceImpl extends ServiceImpl<VGroupMapper, VGroup> impleme
                 .eq(InGroup::getGroupId, groupId)
                 .eq(InGroup::getUserId, userId)) == null)
             throw new BadRequestException("User(UserId ="+userId+") doesn't in this group(groupId="+groupId+")");
+    }
+
+    @Override
+    public void updateGroupInfo(Integer groupId, Integer groupLeader, String name) {
+        // if groupLeader in this group
+        checkUserInGroup(groupLeader, groupId);
+
+        VGroup group = new VGroup();
+        group.setId(groupId);
+        group.setGroupLeader(groupLeader);
+        group.setName(name);
+        update(group, new QueryWrapper<VGroup>().lambda().eq(VGroup::getId, groupId));
     }
 }

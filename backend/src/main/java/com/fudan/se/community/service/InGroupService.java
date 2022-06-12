@@ -20,5 +20,5 @@ public interface InGroupService extends IService<InGroup> {
     List<VGroup> findGroups_taskId(Integer userId, Integer taskId);
     Integer acceptTask_group(Integer userId, Integer groupId);
     boolean isTaskPersonal(Integer taskId);
-
+    Integer findRoomId_userIdAndTaskId(Integer userId, Integer taskId);
 }
