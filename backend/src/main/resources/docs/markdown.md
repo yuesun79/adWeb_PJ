@@ -1399,7 +1399,57 @@ json :
 |**file**  <br>*可选*|**模式** : `"^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==\|[A-Za-z0-9+/]{3}=)?$"`**样例** : `"string"`|string (byte)|
 |**taskId**  <br>*可选*|**样例** : `0`|integer (int64)|
 
+### login
+|名称|说明|类型| 
+|---|---|---|
+|**username**  <br>*必要*|**样例** : `Test"`|string|
+|**password**  <br>*必要*|**样例** : `123456`|string|
 
+##### HTTP响应示例
+
+###### 响应 200
+```
+json :
+"token"
+```
+###### 响应 500
+```
+json :
+"message"
+```
+### register
+|名称|说明|类型| 
+|---|---|---|
+|**username**  <br>*必要*|**样例** : `Test"`|string|
+|**password**  <br>*必要*|**样例** : `123456`|string|
+|**email**  <br>*必要*|**样例** : `Test@qq.com"`|string|
+|**phone_num**  <br>*必要*|**样例** : `123456789`|string|
+|**gender**  <br>*必要*|**样例** : `man or woman"`|string|
+##### HTTP响应示例
+
+###### 响应 200
+```
+json :
+"注册成功"
+```
+###### 响应 500
+```
+json :
+"错误信息"
+```
+### 拦截器机制
+##### HTTP响应示例
+
+###### 响应 200
+```
+json :
+"token success"
+```
+###### 响应 401
+```
+json :
+"token verify fail"
+```
 
 
 
