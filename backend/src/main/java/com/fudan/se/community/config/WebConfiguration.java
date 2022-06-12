@@ -62,8 +62,6 @@ public class WebConfiguration implements WebMvcConfigurer {
         // 排除拦截，除了注册登录（此时还没TOKEN）,其他都拦截
         excludePath.add("/register"); // 登录
         excludePath.add("/login/**"); // 注册
-        excludePath.add("/groupTaskList"); // 注册
-        excludePath.add("/assignGroupInfo"); // 注册
         excludePath.add("/ws/**"); // 注册
 
 
@@ -71,7 +69,6 @@ public class WebConfiguration implements WebMvcConfigurer {
         excludePath.add("/webjars/**");
         excludePath.add("/swagger-ui.html/**");
         excludePath.add("/v2/**");
-
 
         excludePath.add("/static/**"); // 把静态资源的访问也排除
         excludePath.add("/assets/**"); // 把静态资源的访问也排除
