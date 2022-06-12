@@ -154,12 +154,12 @@ public class MessageWSServer {
         boolean taskFlag = message.getType().equals("TaskMessage");
 
         // 发送给同一个房间的User（根据数据库查询）
-        List<User> users = WebSocketServer.roomService.findUsersInRoom(roomId);
+        List<User> users = roomService.findUsersInRoom(roomId);
         log.info(users);
         if (taskFlag) {
             // 当前团队人数
             ((TaskMessage)message).setTeamMem(users.size());
-            Integer teamSize = WebSocketServer.roomService.getTeamSize_roomId(roomId);
+            Integer teamSize = roomService.getTeamSize_roomId(roomId);
             // 组队总需人数
             ((TaskMessage)message).setTeamSize(teamSize);
         }

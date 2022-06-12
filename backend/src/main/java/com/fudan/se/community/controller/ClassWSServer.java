@@ -1,12 +1,10 @@
 package com.fudan.se.community.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fudan.se.community.pojo.message.OnlineStatusMessage;
 import com.fudan.se.community.pojo.message.Message;
-import com.fudan.se.community.service.RoomService;
+import com.fudan.se.community.pojo.message.OnlineStatusMessage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -15,16 +13,16 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-
-@ServerEndpoint(value = "/ws/community/{sid}/{positionX}/{positionY}")
+@ServerEndpoint(value = "/ws/class/{sid}/{positionX}/{positionY}")
 @Component
-public class WebSocketServer {
+public class ClassWSServer{
     static Log log = LogFactory.getLog(WebSocketServer.class);
     static ObjectMapper mapper = new ObjectMapper();
 
+
     private static int onlineCount = 0;
     // 线程安全Set
-    private static CopyOnWriteArraySet<WebSocketServer> webSocketServers = new CopyOnWriteArraySet<>();
+    private static CopyOnWriteArraySet<ClassWSServer> webSocketServers = new CopyOnWriteArraySet<>();
     private static CopyOnWriteArraySet<Integer> onLineIds = new CopyOnWriteArraySet<>();
     private Session session;
     private Integer sid;
@@ -110,26 +108,26 @@ public class WebSocketServer {
     // 发送自定义消息
     public static void sendGroupMessage(Message message, boolean self) throws IOException{
         String msg = mapper.writeValueAsString(message);
-            for (WebSocketServer item : webSocketServers) {
-                try {
-                    // 全部推送
-                    if (self | !item.sid.equals(message.getSid()))
-                        item.sendMessage(msg);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        for (ClassWSServer item : webSocketServers) {
+            try {
+                // 全部推送
+                if (self | !item.sid.equals(message.getSid()))
+                    item.sendMessage(msg);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+        }
     }
 
     private static synchronized void subOnlineCount() {
-        WebSocketServer.onlineCount--;
+        ClassWSServer.onlineCount--;
     }
 
     private static synchronized int getOnlineCount() {
-        return WebSocketServer.onlineCount;
+        return ClassWSServer.onlineCount;
     }
 
     private static synchronized void addOnlineCount() {
-        WebSocketServer.onlineCount++;
+        ClassWSServer.onlineCount++;
     }
 }
