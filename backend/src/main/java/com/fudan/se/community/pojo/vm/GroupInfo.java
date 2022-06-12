@@ -1,4 +1,4 @@
-package com.fudan.se.community.vm;
+package com.fudan.se.community.pojo.vm;
 
 import com.fudan.se.community.pojo.task.group.VGroup;
 import com.fudan.se.community.pojo.user.User;

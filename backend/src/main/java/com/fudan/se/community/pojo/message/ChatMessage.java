@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class ChatMessage extends Message {
     Integer roomId;
     Integer tid;
+    String tUsername;
     boolean status = false;
 
     public ChatMessage(Integer sid, String message, Integer roomId) {

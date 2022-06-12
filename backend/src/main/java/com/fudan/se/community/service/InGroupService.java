@@ -3,8 +3,7 @@ package com.fudan.se.community.service;
 import com.fudan.se.community.pojo.task.group.InGroup;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fudan.se.community.pojo.task.group.VGroup;
-import com.fudan.se.community.pojo.user.User;
-import com.fudan.se.community.vm.GroupTask;
+import com.fudan.se.community.pojo.vm.GroupTask;
 
 import java.util.List;
 

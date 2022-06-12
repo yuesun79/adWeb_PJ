@@ -6,7 +6,7 @@ import com.fudan.se.community.controller.response.TasksResponse;
 import com.fudan.se.community.pojo.user.User;
 import com.fudan.se.community.service.UserService;
 import com.fudan.se.community.service.VClassService;
-import com.fudan.se.community.vm.Task;
+import com.fudan.se.community.pojo.vm.Task;
 import com.fudan.se.community.service.TaskService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

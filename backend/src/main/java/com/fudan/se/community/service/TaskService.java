@@ -2,10 +2,9 @@ package com.fudan.se.community.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fudan.se.community.controller.response.TasksResponse;
-import com.fudan.se.community.vm.Task;
+import com.fudan.se.community.pojo.vm.Task;
 
 import java.util.List;
-import java.util.Map;
 
 public interface TaskService extends IService<com.fudan.se.community.pojo.task.Task> {
     /** RetrieveInfoController **/

@@ -1,7 +1,6 @@
 package com.fudan.se.community.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fudan.se.community.mapper.TaskMapper;
 import com.fudan.se.community.pojo.message.ChatMessage;
 import com.fudan.se.community.pojo.message.Message;
 import com.fudan.se.community.pojo.message.OnlineStatusMessage;
@@ -10,6 +9,7 @@ import com.fudan.se.community.pojo.user.User;
 import com.fudan.se.community.repository.ChatMessageRepository;
 import com.fudan.se.community.repository.MessageRepository;
 import com.fudan.se.community.service.RoomService;
+import com.fudan.se.community.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-@ServerEndpoint(value = "/ws/room/{sid}/{roomId}")
+@ServerEndpoint(value = "/ws/room/{sid}/{roomId}/{positionX}/{positionY}")
 @Component
 public class MessageWSServer {
     static Log log = LogFactory.getLog(MessageWSServer.class);
@@ -35,6 +35,8 @@ public class MessageWSServer {
     public static MessageRepository messageRepository;
     @Autowired
     public static ChatMessageRepository chatMessageRepository;
+    @Autowired
+    public static UserService userService;
 
     private static int onlineCount = 0;
     // 线程安全Set
@@ -43,8 +45,8 @@ public class MessageWSServer {
     private Session session;
     private Integer sid;
     private Integer roomId;
-    private final String positionX = "";
-    private final String positionY = "";
+    private String positionX = "";
+    private String positionY = "";
 
     /**
      * 可用来展示在线人数
@@ -53,12 +55,17 @@ public class MessageWSServer {
      */
 
     @OnOpen
-    public void onOpen(Session session, @PathParam("sid")Integer sid,
-                       @PathParam("roomId")Integer roomId) {
+    public void onOpen(Session session,
+                       @PathParam("sid")Integer sid,
+                       @PathParam("roomId")Integer roomId,
+                       @PathParam("positionX")String positionX,
+                       @PathParam("positionY")String positionY) {
         log.info("in Message");
         this.session = session;
         this.sid = sid;
         this.roomId = roomId;
+        this.positionX = positionX;
+        this.positionY = positionY;
         webSocketServers.add(this);
         onLineIds.add(this.sid);
         addOnlineCount();
@@ -68,9 +75,9 @@ public class MessageWSServer {
             // welcome banner
             sendMessage("hello Room");
             // group online message
-//            OnlineStatusMessage message = new OnlineStatusMessage(onLineIds, sid, "online",
-//                    positionX, positionY);
-//            sendGroupMessage(message, this.roomId);
+            OnlineStatusMessage message = new OnlineStatusMessage(onLineIds, sid, "online",
+                    positionX, positionY);
+            sendGroupMessage(message, this.roomId);
             // find unchecked messages from mongodb and send
             List<ChatMessage> chatMessages = chatMessageRepository.findByTidAndAndRoomIdAndStatus(sid, roomId, false);
             for (ChatMessage m : chatMessages) {
@@ -92,14 +99,14 @@ public class MessageWSServer {
         subOnlineCount();
         log.info(this.sid + "关闭连接 当前在线人数为" + getOnlineCount());
 
-//        try {
-//            // group online message
-//            OnlineStatusMessage message = new OnlineStatusMessage(onLineIds, this.sid, "offline",
-//                    this.positionX, this.positionY);
-//            sendGroupMessage(message, this.roomId);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            // group online message
+            OnlineStatusMessage message = new OnlineStatusMessage(onLineIds, this.sid, "offline",
+                    this.positionX, this.positionY);
+            sendGroupMessage(message, this.roomId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -125,8 +132,19 @@ public class MessageWSServer {
     }
 
     // 服务器端主动推送
-    public void sendMessage(String message) throws IOException{
+    public void sendMessage(String message) throws IOException {
         this.session.getBasicRemote().sendText(message);
+    }
+
+    public void sendMessage(Message message) throws IOException {
+        String sUsername = userService.retrieveUserInfo(message.getSid()).getUsername();
+        message.setSUsername(sUsername);
+        if (message.getType().equals("ChatMessage") || message.getType().equals("TaskMessage")) {
+            String tUsername = userService.retrieveUserInfo(((ChatMessage)message).getTid()).getUsername();
+            ((ChatMessage) message).setTUsername(tUsername);
+        }
+
+        this.session.getBasicRemote().sendText(mapper.writeValueAsString(message));
     }
 
     // 发送自定义消息
@@ -161,7 +179,7 @@ public class MessageWSServer {
                     log.info(message);
                     messageRepository.insert((ChatMessage) message);
                 }
-                item.sendMessage(mapper.writeValueAsString(message));
+                item.sendMessage(message);
             }
         }
         // offline : save status false

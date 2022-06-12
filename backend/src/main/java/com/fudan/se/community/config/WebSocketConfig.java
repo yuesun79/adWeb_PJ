@@ -5,6 +5,7 @@ import com.fudan.se.community.controller.WebSocketServer;
 import com.fudan.se.community.repository.ChatMessageRepository;
 import com.fudan.se.community.repository.MessageRepository;
 import com.fudan.se.community.service.RoomService;
+import com.fudan.se.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,13 +36,10 @@ public class WebSocketConfig {
         MessageWSServer.chatMessageRepository = chatMessageRepository;
     }
 
-
-
-//    @Override
-//    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-//        registry.addHandler(myWebSocketHandler, "/websocket")
-//                .addInterceptors(new MySocketHandshakeInterceptor()).setAllowedOrigins("*");
-//    }
+    @Autowired
+    public void setUserService(UserService userService) {
+        MessageWSServer.userService = userService;
+    }
 
 
 }

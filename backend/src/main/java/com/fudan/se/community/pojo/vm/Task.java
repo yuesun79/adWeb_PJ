@@ -1,4 +1,4 @@
-package com.fudan.se.community.vm;
+package com.fudan.se.community.pojo.vm;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

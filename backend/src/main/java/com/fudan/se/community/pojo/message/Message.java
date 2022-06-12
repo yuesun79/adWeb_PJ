@@ -18,7 +18,7 @@ public class Message implements Serializable {
     @Id
     String id;
     Integer sid;
-
+    String sUsername;
     String type;
     String message;
 

@@ -1,7 +1,6 @@
 package com.fudan.se.community.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.fudan.se.community.exception.BadRequestException;
 import com.fudan.se.community.mapper.OccupyMapper;
 import com.fudan.se.community.mapper.RoomMapper;
@@ -11,13 +10,11 @@ import com.fudan.se.community.mapper.InGroupMapper;
 import com.fudan.se.community.pojo.task.group.Occupy;
 import com.fudan.se.community.pojo.task.group.Room;
 import com.fudan.se.community.pojo.task.group.VGroup;
-import com.fudan.se.community.pojo.user.User;
 import com.fudan.se.community.service.InGroupService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fudan.se.community.service.RoomService;
 import com.fudan.se.community.service.VGroupService;
-import com.fudan.se.community.vm.GroupTask;
-import com.fudan.se.community.vm.Task;
+import com.fudan.se.community.pojo.vm.GroupTask;
+import com.fudan.se.community.pojo.vm.Task;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

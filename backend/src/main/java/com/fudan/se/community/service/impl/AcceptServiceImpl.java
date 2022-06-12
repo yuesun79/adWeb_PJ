@@ -6,19 +6,14 @@ import com.fudan.se.community.mapper.AcceptMapper;
 import com.fudan.se.community.pojo.task.Accept;
 import com.fudan.se.community.service.InGroupService;
 import com.fudan.se.community.util.FileUtil;
-import com.fudan.se.community.vm.Task;
 import com.fudan.se.community.service.AcceptService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fudan.se.community.vm.Task;
-import io.swagger.models.auth.In;
+import com.fudan.se.community.pojo.vm.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayInputStream;
-import java.sql.Timestamp;
-import java.util.Calendar;
 
 /**
  * <p>

@@ -4,7 +4,7 @@ import com.fudan.se.community.pojo.task.group.InGroup;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.fudan.se.community.pojo.task.group.VGroup;
 import com.fudan.se.community.pojo.user.User;
-import com.fudan.se.community.vm.GroupTask;
+import com.fudan.se.community.pojo.vm.GroupTask;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 

@@ -1,8 +1,8 @@
 package com.fudan.se.community.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.fudan.se.community.vm.GroupTask;
-import com.fudan.se.community.vm.Task;
+import com.fudan.se.community.pojo.vm.GroupTask;
+import com.fudan.se.community.pojo.vm.Task;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 

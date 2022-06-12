@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fudan.se.community.mapper.TaskMapper">
 
-    <select id="retrieveTask_classId" resultType="com.fudan.se.community.vm.Task" parameterType="Integer">
+    <select id="retrieveTask_classId" resultType="com.fudan.se.community.pojo.vm.Task" parameterType="Integer">
         SELECT task.*,
         user.username as publisherName, user.email as publisherEmail, user.phone_num as publisherPhone
         FROM task
@@ -11,7 +11,7 @@
         WHERE r.class_id = #{classId}
     </select>
 
-    <select id="retrieveTasks_userId_accept" resultType="com.fudan.se.community.vm.Task" parameterType="Integer">
+    <select id="retrieveTasks_userId_accept" resultType="com.fudan.se.community.pojo.vm.Task" parameterType="Integer">
         SELECT task.*,
         user.username as publisherName, user.email as publisherEmail, user.phone_num as publisherPhone
         FROM task
@@ -22,7 +22,7 @@
         JOIN user ON task.publisher_id = user.id;
     </select>
 
-    <select id="retrieveTasks_userId_inGroup" resultType="com.fudan.se.community.vm.GroupTask" parameterType="Integer">
+    <select id="retrieveTasks_userId_inGroup" resultType="com.fudan.se.community.pojo.vm.GroupTask" parameterType="Integer">
         SELECT task.*,
         user.username as publisherName, user.email as publisherEmail, user.phone_num as publisherPhone,
         G.name as groupName, G.group_leader groupLeader, G.process groupProcess, G.group_id groupId
@@ -37,7 +37,7 @@
             ON task.id = G.task_id
         JOIN user ON task.publisher_id = user.id;
     </select>
-    <select id="findTask_id" resultType="com.fudan.se.community.vm.Task">
+    <select id="findTask_id" resultType="com.fudan.se.community.pojo.vm.Task">
         SELECT  task.*, user.username publisherName, user.email publisherEmail, user.phone_num publisherPhone
         FROM task
         LEFT JOIN user ON task.publisher_id = user.id

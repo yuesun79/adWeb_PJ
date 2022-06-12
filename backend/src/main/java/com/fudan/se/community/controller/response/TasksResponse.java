@@ -1,7 +1,7 @@
 package com.fudan.se.community.controller.response;
 
-import com.fudan.se.community.vm.GroupTask;
-import com.fudan.se.community.vm.Task;
+import com.fudan.se.community.pojo.vm.GroupTask;
+import com.fudan.se.community.pojo.vm.Task;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

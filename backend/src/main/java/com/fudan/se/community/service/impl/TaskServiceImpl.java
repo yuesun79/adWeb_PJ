@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fudan.se.community.controller.response.TasksResponse;
 import com.fudan.se.community.exception.BadRequestException;
 import com.fudan.se.community.service.UserService;
-import com.fudan.se.community.vm.GroupTask;
-import com.fudan.se.community.vm.Task;
+import com.fudan.se.community.pojo.vm.GroupTask;
+import com.fudan.se.community.pojo.vm.Task;
 import com.fudan.se.community.mapper.TaskMapper;
 import com.fudan.se.community.service.ClassTaskService;
 import com.fudan.se.community.service.TaskService;
@@ -16,9 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
