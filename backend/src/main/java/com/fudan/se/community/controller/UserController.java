@@ -2,20 +2,16 @@ package com.fudan.se.community.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.fudan.se.community.annotation.PassToken;
-import com.fudan.se.community.annotation.UserLoginToken;
 import com.fudan.se.community.common.CommonResult;
 import com.fudan.se.community.dto.LoginDto;
 import com.fudan.se.community.dto.RegisterDto;
 import com.fudan.se.community.exception.BadRequestException;
-import com.fudan.se.community.mapper.UserMapper;
 import com.fudan.se.community.pojo.user.User;
 import com.fudan.se.community.service.UserService;
 import com.fudan.se.community.util.MD5Utils;
 import com.fudan.se.community.util.TokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>
@@ -57,9 +54,10 @@ public class UserController {
 
     /**
      * 用户登录
+     * @return
      */
     @RequestMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto) throws JSONException {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody LoginDto loginDto) throws JSONException {
         log.info(loginDto.toString());
 
         String ans = userService.login(loginDto);
@@ -69,10 +67,10 @@ public class UserController {
             User user = userService.getOne(queryWrapper);
             String s = MD5Utils.code(loginDto.getPassword());
             String token = TokenUtil.sign(new User(loginDto.getUsername(),s));
-            HashMap<String,Object> hs =new HashMap<>();
+            Map<String,Object> hs =new HashMap<>();
             hs.put("token",token);
-            hs.put("userid",user.getId());
-            return new ResponseEntity<>(token,HttpStatus.OK);
+            hs.put("userId",user.getId());
+            return new ResponseEntity<Map<String, Object>>(hs, HttpStatus.OK);
         }
         throw new BadRequestException(ans);
     }
