@@ -48,7 +48,7 @@ public class TokenInterceptor implements HandlerInterceptor {
             }
         }else {
             response.setCharacterEncoding("UTF-8");
-            String token = request.getHeader("Token");
+            String token = request.getHeader("Token"); //Authorization
             System.out.println(token);
             if (token != null) {
                 System.out.println("TOKEN is"+token);

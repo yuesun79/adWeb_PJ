@@ -75,6 +75,7 @@ public class InGroupServiceImpl extends ServiceImpl<InGroupMapper, InGroup> impl
         List<VGroup> oldGroup = vGroupMapper.findGroups_taskId(taskId);
         // 不存在 insert v_group
         Room room = new Room();
+        room.setName("new room");
         if (oldGroup.size() == 0) {
             VGroup group1 = new VGroup(taskId);
             vGroupMapper.insert(group1);
