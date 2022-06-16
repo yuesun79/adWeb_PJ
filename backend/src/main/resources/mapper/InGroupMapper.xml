@@ -10,7 +10,7 @@
         WHERE g.task_id = #{taskId}
     </select>
     <select id="getUsersInGroup" resultType="com.fudan.se.community.pojo.user.User">
-        SELECT user.id
+        SELECT user.*
         FROM user
         JOIN in_group ON user.id = in_group.user_id and in_group.group_id = #{groupId}
     </select>

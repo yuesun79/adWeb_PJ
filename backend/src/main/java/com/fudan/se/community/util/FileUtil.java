@@ -38,7 +38,8 @@ public class FileUtil {
         //文件重新命名
         String FileNameAuto = String.format("%X_%X", (int) (dt.getTime()),
                 random.nextInt());
-        String name= mFile.getOriginalFilename();
+        // todo: null pointer bug
+        String name = mFile.getOriginalFilename();
         int pos = name.lastIndexOf(".");
         //获取文件名后缀Fi
         String ext = name.substring(pos);

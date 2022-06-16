@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class AcceptTaskController {
     /** accept **/
-    // TODO: 2022/4/26  
     // 获取该课堂所有的任务 v_class(id) class_task task
     // 筛选条件：个人/团体
 
@@ -75,7 +74,7 @@ public class AcceptTaskController {
         inGroupService.acceptTask_group(userId, groupId);
         // 加入团队成功 发送消息
         // get roomId
-        Integer roomId = vGroupService.getRoomId_groupId(groupId);
+        Integer roomId = vGroupService. getRoomId_groupId(groupId);
         // websocket sendMessage
         TaskMessage message = new TaskMessage(userId, "Task status updates", roomId);
         MessageWSServer.sendMessageFrom(message, roomId);
@@ -96,9 +95,6 @@ public class AcceptTaskController {
     }
 
     /** submit **/
-    // TODO: 2022/4/26  
-    // 获取某用户所有的任务 user(id) accept task
-    // 筛选条件：个人/团体/course_name
 
     /** personal **/
     @ApiOperation(value="提交个人任务",notes = "update process in accept table(task_id)")
@@ -122,7 +118,8 @@ public class AcceptTaskController {
             @ApiResponse(code = 200, message = "已提交"),
             @ApiResponse(code = 400, message = "\"User doesn't accept this Personal Task before\";" +
                     "\"Task's(TaskId=\"+ taskId +\") ddl has reached\";" +
-                    "\"User(UserId =\"+userId+\") doesn't in this group(groupId=\"+groupId+\")\"")
+                    "\"User(UserId =\"+userId+\") doesn't in this group(groupId=\"+groupId+\")\"" +
+                    "\"No Authority: User(userId=\"+userId+\") isn't the GroupLeader\"")
     })
     @RequestMapping(value = "/submitGroupTask", method = RequestMethod.PUT)
     public ResponseEntity<Object> submitGroupTask(MultipartFile file,

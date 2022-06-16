@@ -88,6 +88,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
     }
 
+    @Override
+    public void changeUserInfo(Integer userId, String status) {
+        User user = new User();
+        user.setId(userId);
+        user.setStatus(status);
+        if (userMapper.updateById(user) == 0)
+            throw new BadRequestException("User(userId="+userId+") doesn't exist");
+    }
+
 
     /**
      * 注册表单后端验证

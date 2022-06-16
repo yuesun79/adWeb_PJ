@@ -8,9 +8,7 @@ import java.sql.Blob;
 @Data
 @ToString
 public class GroupTask extends Task {
-//    private Task task;
-//    private VGroup group;
-//    private User user;
+
     private Integer groupId;
     private String groupName;
     private Integer groupLeader;

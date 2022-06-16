@@ -22,4 +22,6 @@ public interface UserService extends IService<User> {
     String isExist(RegisterDto registerDto);
 
     User retrieveUserInfo(Integer userId);
+
+    void changeUserInfo(Integer userId, String status);
 }

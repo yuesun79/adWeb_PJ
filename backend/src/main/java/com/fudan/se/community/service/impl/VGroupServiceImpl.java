@@ -62,6 +62,9 @@ public class VGroupServiceImpl extends ServiceImpl<VGroupMapper, VGroup> impleme
         // check whether overdue
         VGroup vGroup = baseMapper.selectById(groupId);
         taskService.checkOverDue(vGroup.getTaskId());
+        // check whether groupLeader
+        if (!userId.equals(vGroup.getGroupLeader()))
+            throw new BadRequestException("No Authority: User(userId="+userId+") isn't the GroupLeader");
         //todo: check upload file in cloud
         String fileName = FileUtil.upload(file, request);
         log.debug("--------->filename:"+fileName);

@@ -32,6 +32,18 @@ public class PostTaskController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // COMPLETION // STUDENT // free //
+    @ApiOperation(value="user审核自由任务完成",notes = "update accept table")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = ""),
+            @ApiResponse(code = 400, message = "信息不对balabala")
+    })
+
+    @RequestMapping(value = "checkCompletion/freeTask", method = RequestMethod.PUT)
+    public ResponseEntity<Object> checkCompletion_free(@RequestBody CheckPTaskCompleteRequest checkPTaskCompleteRequest) {
+        return null;
+    }
+
     // admin 不用审核 可以是团体任务
     @ApiOperation(value="管理员发布个人任务",notes = "insert task table")
     @ApiResponses({
@@ -89,18 +101,6 @@ public class PostTaskController {
 
     @RequestMapping(value = "admin/checkCompletion/groupTask", method = RequestMethod.PUT)
     public ResponseEntity<Object> checkCompletion_group(@RequestBody CheckGTaskCompleteRequest checkGTaskCompleteRequest) {
-        return null;
-    }
-
-    // COMPLETION // STUDENT // free //
-    @ApiOperation(value="user审核自由任务完成",notes = "update accept table")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = ""),
-            @ApiResponse(code = 400, message = "信息不对balabala")
-    })
-
-    @RequestMapping(value = "checkCompletion/freeTask", method = RequestMethod.PUT)
-    public ResponseEntity<Object> checkCompletion_free(@RequestBody CheckPTaskCompleteRequest checkPTaskCompleteRequest) {
         return null;
     }
 }

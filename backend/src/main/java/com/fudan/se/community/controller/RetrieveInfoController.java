@@ -1,9 +1,11 @@
 package com.fudan.se.community.controller;
 
+import com.baomidou.mybatisplus.extension.api.R;
 import com.fudan.se.community.controller.response.ClassResponse;
 import com.fudan.se.community.controller.response.PTasksMapResponse;
 import com.fudan.se.community.controller.response.TasksResponse;
 import com.fudan.se.community.pojo.user.User;
+import com.fudan.se.community.service.RoomService;
 import com.fudan.se.community.service.UserService;
 import com.fudan.se.community.service.VClassService;
 import com.fudan.se.community.pojo.vm.Task;
@@ -31,6 +33,8 @@ public class RetrieveInfoController {
 
     @Autowired
     VClassService vClassService;
+    @Autowired
+    RoomService roomService;
 
     /** TASKS **/
     @ApiOperation(value="获取taskId对应的任务",notes = "select task table")
@@ -45,7 +49,7 @@ public class RetrieveInfoController {
         return new ResponseEntity<>(task, HttpStatus.OK);
     }
 
-    @ApiOperation(value="获取该课堂所有的任务",notes = "select task table join class_task join v_class")
+    @ApiOperation(value="获取该课堂所有的任务：获取classId对应的任务",notes = "select task table join class_task join v_class")
     @ApiResponses({
             @ApiResponse(code = 200, message = "", response = PTasksMapResponse.class),
             @ApiResponse(code = 400, message = "Class(classId=xxx) doesn't exist")
@@ -85,7 +89,7 @@ public class RetrieveInfoController {
             @ApiResponse(code = 200, message = "", response = ClassResponse.class),
     })
     @RequestMapping(value = "/retrieveClasses", method = RequestMethod.GET)
-    public ResponseEntity<ClassResponse> retrieveClass(Integer userId) {
+    public ResponseEntity<ClassResponse> retrieveClass() {
         ClassResponse res = new ClassResponse(vClassService.getClasses());
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
@@ -141,14 +145,15 @@ public class RetrieveInfoController {
 
 
     /** USER **/
-    @ApiOperation(value="获取当前组的组员信息（个人贡献）",notes = "select user table join in_group")
+    @ApiOperation(value="获取当前组的组员信息",notes = "select user table join in_group")
     @ApiResponses({
             @ApiResponse(code = 200, message = ""),
             @ApiResponse(code = 400, message = "userId不对")
     })
     @RequestMapping(value = "/retrieveGroupUsers", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, Object>> retrieveGroupUsers(@RequestParam Integer groupId) {
-        return null;
+    public ResponseEntity<Object> retrieveGroupUsers(Integer roomId) {
+        List<User> userList = roomService.findUsersInRoom(roomId);
+        return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
     /** GROUP **/

@@ -3,6 +3,7 @@ package com.fudan.se.community.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fudan.se.community.common.CommonResult;
+import com.fudan.se.community.controller.request.task.ListGroupTasksRequest;
 import com.fudan.se.community.dto.LoginDto;
 import com.fudan.se.community.dto.RegisterDto;
 import com.fudan.se.community.exception.BadRequestException;
@@ -10,6 +11,10 @@ import com.fudan.se.community.pojo.user.User;
 import com.fudan.se.community.service.UserService;
 import com.fudan.se.community.util.MD5Utils;
 import com.fudan.se.community.util.TokenUtil;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +95,18 @@ public class UserController {
             throw new BadRequestException(ans);
         }
        return CommonResult.success(ans);
+    }
+
+    @ApiOperation(value="用户修改状态",notes = "update user table")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "状态修改成功"),
+            @ApiResponse(code = 400, message = "\"user(userId=\"+userId+\") doesn't exist\"")
+    })
+    @RequestMapping(value = "/changeStatus", method = RequestMethod.POST)
+    public ResponseEntity<Object> acceptPersonalTask(
+            @ApiParam Integer userId, String status) {
+        userService.changeUserInfo(userId, status);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
 
