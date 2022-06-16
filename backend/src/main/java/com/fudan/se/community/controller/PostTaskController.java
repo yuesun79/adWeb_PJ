@@ -2,8 +2,13 @@ package com.fudan.se.community.controller;
 
 import com.fudan.se.community.controller.request.task.post.CheckGTaskCompleteRequest;
 import com.fudan.se.community.controller.request.task.post.CheckPTaskCompleteRequest;
+import com.fudan.se.community.controller.request.task.post.CreatTaskRequest;
+import com.fudan.se.community.pojo.task.ClassTask;
 import com.fudan.se.community.pojo.task.Task;
-import com.fudan.se.community.service.TaskService;
+import com.fudan.se.community.pojo.task.group.Occupy;
+import com.fudan.se.community.pojo.task.group.Room;
+import com.fudan.se.community.pojo.task.group.VGroup;
+import com.fudan.se.community.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -13,11 +18,24 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+
 @Api(tags="PostTaskController")
 @RestController
 public class PostTaskController {
     @Autowired
     TaskService taskService;
+    @Autowired
+    ClassTaskService classTaskService;
+    @Autowired
+    VGroupService vGroupService;
+    @Autowired
+    OccupyService occupyService;
+    @Autowired
+    RoomService roomService;
+    @Autowired
+    AcceptService acceptService;
+
     /** post **/
     // student 需要验证 只能是个人任务
     @ApiOperation(value="发布自由任务",notes = "insert task table")
@@ -27,8 +45,26 @@ public class PostTaskController {
     })
 
     @RequestMapping(value = "/createFreeTask", method = RequestMethod.PUT)
-    public ResponseEntity<Object> createFreeTask(Task task) {
+    public ResponseEntity<Object> createFreeTask(@RequestBody CreatTaskRequest creatTaskRequest) {
+        System.out.println("------调用成功");
+        Task task= new Task();
+        Timestamp ts= Timestamp.valueOf(String.valueOf(creatTaskRequest.ddl));
+        task.setDdl(ts);
+        task.setDescription(creatTaskRequest.description);
+        task.setEv(creatTaskRequest.ev);
+        task.setName(creatTaskRequest.name);
+        task.setOptional(creatTaskRequest.optional);
+        task.setPublisherId(creatTaskRequest.userId);
+        task.setTeamSize(creatTaskRequest.team_size);
+        //插入class数据
         taskService.insertTask(task);
+        System.out.println("--------插入成功");
+        ClassTask classTask =new ClassTask();
+        classTask.setTaskId(task.getId());
+        classTask.setClassId(creatTaskRequest.classId);
+        //插入class-Task数据
+        classTaskService.insertClassTask(classTask);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -41,7 +77,10 @@ public class PostTaskController {
 
     @RequestMapping(value = "checkCompletion/freeTask", method = RequestMethod.PUT)
     public ResponseEntity<Object> checkCompletion_free(@RequestBody CheckPTaskCompleteRequest checkPTaskCompleteRequest) {
-        return null;
+        int userId =checkPTaskCompleteRequest.getUserId();  //接受任务的学生id
+        int taskId =checkPTaskCompleteRequest.getTaskId();  //已完成的任务id
+        acceptService.checkCompletion(userId,taskId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // admin 不用审核 可以是团体任务
@@ -52,8 +91,20 @@ public class PostTaskController {
     })
 
     @RequestMapping(value = "admin/createPersonalTask", method = RequestMethod.POST)
-    public ResponseEntity<Object> createPersonalTask(Task task) {
-        return null;
+    public ResponseEntity<Object> createPersonalTask(@RequestBody CreatTaskRequest creatTaskRequest) {
+        System.out.println("------调用成功");
+        Task task= new Task();
+        Timestamp ts= Timestamp.valueOf(String.valueOf(creatTaskRequest.ddl));
+        task.setDdl(ts);
+        task.setDescription(creatTaskRequest.description);
+        task.setEv(creatTaskRequest.ev);
+        task.setName(creatTaskRequest.name);
+        task.setOptional(creatTaskRequest.optional);
+        task.setPublisherId(creatTaskRequest.userId);
+        task.setTeamSize(creatTaskRequest.team_size);
+        //管理员新建任务，即该任务已经验证了
+        taskService.adminInsertTask(task);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation(value="管理员发布团队任务",notes = "insert task table")
@@ -61,10 +112,37 @@ public class PostTaskController {
             @ApiResponse(code = 200, message = ""),
             @ApiResponse(code = 400, message = "userId不对/信息不全等")
     })
-
     @RequestMapping(value = "admin/createGroupTask", method = RequestMethod.POST)
-    public ResponseEntity<Object> createGroupTask(Task task) {
-        return null;
+    public ResponseEntity<Object> createGroupTask(@RequestBody CreatTaskRequest creatTaskRequest) {
+        System.out.println("------调用成功");
+        Task task= new Task();
+        Timestamp ts= Timestamp.valueOf(String.valueOf(creatTaskRequest.ddl));
+        task.setDdl(ts);
+        task.setDescription(creatTaskRequest.description);
+        task.setEv(creatTaskRequest.ev);
+        task.setName(creatTaskRequest.name);
+        task.setOptional(creatTaskRequest.optional);
+        task.setPublisherId(creatTaskRequest.userId);
+        task.setTeamSize(creatTaskRequest.team_size);
+        //管理员新建任务，即该任务已经验证了
+        taskService.adminInsertTask(task);
+       //创建团队
+        VGroup vGroup =new VGroup();
+        vGroup.setTaskId(task.getId());
+        vGroup.setChecked(0);
+        vGroup.setName(task.getName()+" "+"group");
+        vGroupService.insert(vGroup);
+
+        //为该任务新建一个房间
+        Room room =new Room();
+        room.setName(creatTaskRequest.name);
+        roomService.insert(room);
+
+       //绑定房间和团队
+        Occupy occupy =new Occupy(vGroup.getId(),room.getId());
+        occupyService.insert(occupy);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /** review **/
@@ -77,7 +155,8 @@ public class PostTaskController {
 
     @RequestMapping(value = "admin/checkFreeTask", method = RequestMethod.PUT)
     public ResponseEntity<Object> checkFreeTask(@RequestParam Integer taskId) {
-        return null;
+        taskService.adminChecked(taskId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // COMPLETION // ADMIN // personal //
@@ -89,7 +168,10 @@ public class PostTaskController {
 
     @RequestMapping(value = "admin/checkCompletion/personalTask", method = RequestMethod.PUT)
     public ResponseEntity<Object> checkCompletion_personal(@RequestBody CheckPTaskCompleteRequest checkPTaskCompleteRequest) {
-        return null;
+        int userId =checkPTaskCompleteRequest.getUserId();
+        int taskId =checkPTaskCompleteRequest.getTaskId();
+        acceptService.checkCompletion(userId,taskId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     // group //
@@ -101,6 +183,15 @@ public class PostTaskController {
 
     @RequestMapping(value = "admin/checkCompletion/groupTask", method = RequestMethod.PUT)
     public ResponseEntity<Object> checkCompletion_group(@RequestBody CheckGTaskCompleteRequest checkGTaskCompleteRequest) {
-        return null;
+      // int userId =checkGTaskCompleteRequest.getUserId();
+       //int taskId =checkGTaskCompleteRequest.getTaskId();
+       int groupId =checkGTaskCompleteRequest.getGroupId();
+
+       //审核团队任务
+       vGroupService.checkCompletion(groupId);
+       //删除房间与组号的组合表
+       occupyService.romove(groupId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

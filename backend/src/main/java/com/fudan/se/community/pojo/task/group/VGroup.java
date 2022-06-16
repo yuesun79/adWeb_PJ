@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author SY
@@ -37,26 +37,25 @@ public class VGroup implements Serializable {
 
     private Integer groupLeader;
 
-    private Integer process;
+    private Integer checked;
 
     private String file;
 
 
     public VGroup(Integer process, String file) {
-        this.process = process;
+        this.checked = process;
         this.file = file;
     }
 
-    public VGroup(Integer taskId) {
-        this.taskId = taskId;
-    }
-
-    public VGroup(Integer id, String name, Integer taskId, Integer groupLeader, Integer process, String file) {
+        public VGroup(Integer id, String name, Integer taskId, Integer groupLeader, Integer process, String file) {
         this.id = id;
         this.name = name;
         this.taskId = taskId;
         this.groupLeader = groupLeader;
-        this.process = process;
+        this.checked = process;
         this.file = file;
+    }
+    public VGroup(Integer Checked){
+        this.checked=Checked;
     }
 }

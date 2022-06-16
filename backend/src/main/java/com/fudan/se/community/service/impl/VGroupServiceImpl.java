@@ -45,6 +45,16 @@ public class VGroupServiceImpl extends ServiceImpl<VGroupMapper, VGroup> impleme
 
 
     @Override
+    public void checkCompletion(int groupId) {
+        if(!this.update(
+                new VGroup(2),
+                new QueryWrapper<VGroup>().lambda()
+                        .eq(VGroup::getId, groupId)))
+            throw new BadRequestException("group doesn't complete this Task dont exist");
+        System.out.println("------------删除成功");
+    }
+
+    @Override
     public Integer getRoomId_groupId(Integer groupId) {
         VGroup vGroup = baseMapper.selectById(groupId);
         if (vGroup == null) {
@@ -101,5 +111,13 @@ public class VGroupServiceImpl extends ServiceImpl<VGroupMapper, VGroup> impleme
         group.setGroupLeader(groupLeader);
         group.setName(name);
         update(group, new QueryWrapper<VGroup>().lambda().eq(VGroup::getId, groupId));
+    }
+
+    @Override
+    public void insert(VGroup vGroup) {
+        int influenceRows = baseMapper.insert(vGroup);
+        if (influenceRows==0) {
+            throw new BadRequestException("Vgroup setup fails");
+        }
     }
 }

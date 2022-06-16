@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author SY
@@ -37,7 +37,9 @@ public class Accept implements Serializable {
     private Integer process;
 
     private String file;
-
+public Accept(Integer process){
+    this.process=process;
+}
     public Accept(Integer process, String file) {
         this.process = process;
         this.file = file;

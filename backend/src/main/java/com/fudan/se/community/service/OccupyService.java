@@ -13,4 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface OccupyService extends IService<Occupy> {
 
+     void romove(int groupId) ;
+
+    void insert(Occupy occupy);
 }

@@ -10,7 +10,9 @@ CREATE TABLE IF NOT EXISTS user (
 	phone_num VARCHAR(40) NOT NULL,
 	password VARCHAR(100) NOT NULL,
 	ev INT UNSIGNED DEFAULT(0),
+          status INT UNSIGNED DEFAULT(0),
 	register_date TIMESTAMP,
+          gender VARCHAR(100) NOT NULL,
 	PRIMARY KEY (id)
 );
 
