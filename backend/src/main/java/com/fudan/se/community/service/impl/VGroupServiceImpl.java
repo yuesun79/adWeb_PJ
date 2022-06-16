@@ -67,7 +67,7 @@ public class VGroupServiceImpl extends ServiceImpl<VGroupMapper, VGroup> impleme
             throw new BadRequestException("No Authority: User(userId="+userId+") isn't the GroupLeader");
         //todo: check upload file in cloud
         String fileName = FileUtil.upload(file, request);
-        log.debug("--------->filename:"+fileName);
+        log.info("--------->filename:"+fileName);
         // check whether in group
         if(!this.update(new VGroup(1, fileName),
                 new QueryWrapper<VGroup>().lambda()

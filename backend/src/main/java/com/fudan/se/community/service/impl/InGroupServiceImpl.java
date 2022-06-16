@@ -63,6 +63,15 @@ public class InGroupServiceImpl extends ServiceImpl<InGroupMapper, InGroup> impl
     }
 
     @Override
+    public Integer findGroupId_userIdAndTaskId(Integer userId, Integer taskId) {
+        VGroup vGroup = vGroupMapper.findGroup_userIdAndTaskId(userId, taskId);
+        if (vGroup == null)
+            throw new BadRequestException("There isn't any group user(userId="+userId+") with this task" +
+                    "(taskId"+taskId+")");
+        return vGroup.getId();
+    }
+
+    @Override
     public List<VGroup> findGroups_taskId(Integer userId, Integer taskId) {
         if (isTaskPersonal(taskId))
             throw new BadRequestException("Task(taskId="+taskId+") is personal task");

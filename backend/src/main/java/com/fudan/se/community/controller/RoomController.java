@@ -34,10 +34,22 @@ public class RoomController {
             @ApiResponse(code = 200, message = "roomId"),
             @ApiResponse(code = 400, message = "\"There isn't any group user(userId=\"+userId+\") with this task(taskId\"+taskId+\")\"")
     })
-    @RequestMapping(value = "/getRoom/task", method = RequestMethod.GET)
-    public ResponseEntity<Object> getRoom_taskId(
+    @RequestMapping(value = "/task/getRoomId", method = RequestMethod.GET)
+    public ResponseEntity<Object> getRoomId_taskId(
             @ApiParam Integer userId, Integer taskId) {
             Integer roomId = inGroupService.findRoomId_userIdAndTaskId(userId, taskId);
         return new ResponseEntity<>(roomId, HttpStatus.OK);
+    }
+
+    @ApiOperation(value="获取用户某个团队任务对应的groupId",notes = "")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "groupId"),
+            @ApiResponse(code = 400, message = "\"There isn't any group user(userId=\"+userId+\") with this task(taskId\"+taskId+\")\"")
+    })
+    @RequestMapping(value = "/task/getGroupId", method = RequestMethod.GET)
+    public ResponseEntity<Object> getGroupId_taskId(
+            @ApiParam Integer userId, Integer taskId) {
+        Integer groupId = inGroupService.findGroupId_userIdAndTaskId(userId, taskId);
+        return new ResponseEntity<>(groupId, HttpStatus.OK);
     }
 }

@@ -46,7 +46,7 @@ public class TokenInterceptor implements HandlerInterceptor {
             if (passToken.required()) {
                 return true;
             }
-        }else {
+        } else {
             response.setCharacterEncoding("UTF-8");
             String token = request.getHeader("Token"); //Authorization
             System.out.println(token);

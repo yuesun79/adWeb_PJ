@@ -31,7 +31,7 @@ public class FileUtil {
         if(!directory.exists()){
             directory.mkdirs();
         }
-        log.debug(">"+directory.getAbsoluteFile());
+        log.info(directory.getAbsoluteFile().toString());
         String SaveUrl = "/files/" + year + "_" + month+"_"+day+"/";
         Date dt = new Date();
         Random random = new Random();
