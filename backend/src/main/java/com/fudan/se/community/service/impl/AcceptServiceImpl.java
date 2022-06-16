@@ -41,9 +41,12 @@ public class AcceptServiceImpl extends ServiceImpl<AcceptMapper, Accept> impleme
         Accept accept = baseMapper.selectOne(new QueryWrapper<Accept>().lambda()
                 .eq(Accept::getTaskId, taskId)
                 .eq(Accept::getUserId, userId));
-        if (accept != null) throw new BadRequestException("User already accept this personal Task, process:"+ getTaskProcess(accept.getProcess()));
+        if (accept != null)
+            throw new BadRequestException("User already accept this personal Task, process:"+ getTaskProcess(accept.getChecked()));
         // 个人任务 insert accept
-        Accept accept1 = new Accept(userId, taskId);
+        Accept accept1 = new Accept();
+        accept1.setUserId(userId);
+        accept1.setTaskId(taskId);
         baseMapper.insert(accept1);
 
         return accept1.getId();

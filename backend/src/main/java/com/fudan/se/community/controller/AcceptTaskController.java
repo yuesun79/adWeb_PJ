@@ -139,7 +139,10 @@ public class AcceptTaskController {
     })
     @RequestMapping(value = "/submitGroupTask/exp", method = RequestMethod.PUT)
     public ResponseEntity<Object> assignEV(@RequestBody AssignEVRequest assignEVRequest) {
-        return null;
+        vGroupService.assignEV4GroupUsers(assignEVRequest.getUserId(),
+                assignEVRequest.getGroupId(),
+                assignEVRequest.getScore());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

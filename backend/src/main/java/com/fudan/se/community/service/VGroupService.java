@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * <p>
@@ -21,4 +22,5 @@ public interface VGroupService extends IService<VGroup> {
     Task getTask_groupId(Integer groupId);
     void checkUserInGroup(Integer userId, Integer groupId);
     void updateGroupInfo(Integer groupId, Integer groupLeader, String name);
+    void assignEV4GroupUsers(Integer userId, Integer groupId, Map<Integer, Double> scores);
 }
