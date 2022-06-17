@@ -61,7 +61,7 @@ public class User implements Serializable {
     /**
      * 环境
      */
-    private int ev;
+    private double ev;
     private String phoneNum;
     private String email;
     private String status;

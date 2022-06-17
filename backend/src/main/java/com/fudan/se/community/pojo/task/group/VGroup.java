@@ -39,6 +39,8 @@ public class VGroup implements Serializable {
 
     private Integer checked;
 
+    private Integer process;
+
     private String file;
 
 
@@ -47,14 +49,7 @@ public class VGroup implements Serializable {
         this.file = file;
     }
 
-        public VGroup(Integer id, String name, Integer taskId, Integer groupLeader, Integer process, String file) {
-        this.id = id;
-        this.name = name;
-        this.taskId = taskId;
-        this.groupLeader = groupLeader;
-        this.checked = process;
-        this.file = file;
-    }
+
     public VGroup(Integer Checked){
         this.checked=Checked;
     }

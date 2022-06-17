@@ -12,6 +12,7 @@ import com.fudan.se.community.pojo.task.group.Occupy;
 import com.fudan.se.community.pojo.task.group.Room;
 import com.fudan.se.community.pojo.task.group.VGroup;
 import com.fudan.se.community.mapper.VGroupMapper;
+import com.fudan.se.community.pojo.user.User;
 import com.fudan.se.community.service.InGroupService;
 import com.fudan.se.community.service.TaskService;
 import com.fudan.se.community.service.VGroupService;
@@ -24,7 +25,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-
+import java.util.List;
+import java.util.Map;
 /**
  * <p>
  *  服务实现类
@@ -42,7 +44,8 @@ public class VGroupServiceImpl extends ServiceImpl<VGroupMapper, VGroup> impleme
     TaskService taskService;
     @Autowired
     OccupyMapper occupyMapper;
-
+    @Autowired
+    UserMapper userMapper;
 
     @Override
     public void checkCompletion(int groupId) {
@@ -79,7 +82,9 @@ public class VGroupServiceImpl extends ServiceImpl<VGroupMapper, VGroup> impleme
         String fileName = FileUtil.upload(file, request);
         log.debug("--------->filename:"+fileName);
         // check whether in group
-        if(!this.update(new VGroup(1, fileName),
+        vGroup.setChecked(1);
+        vGroup.setFile(fileName);
+        if(!this.update(vGroup,
                 new QueryWrapper<VGroup>().lambda()
                         .eq(VGroup::getId, groupId)))
             throw new BadRequestException("User doesn't accept this Group Task before");
@@ -88,7 +93,8 @@ public class VGroupServiceImpl extends ServiceImpl<VGroupMapper, VGroup> impleme
     @Override
     public Task getTask_groupId(Integer groupId) {
         VGroup vGroup = baseMapper.selectById(groupId);
-        log.info("Task--:"+taskService.getById(vGroup.getTaskId()).toString());
+        if (vGroup == null)
+            throw new BadRequestException("Group(groupId="+groupId+") doesn't exist");
         return taskService.getById(vGroup.getTaskId());
     }
 
@@ -111,6 +117,29 @@ public class VGroupServiceImpl extends ServiceImpl<VGroupMapper, VGroup> impleme
         group.setGroupLeader(groupLeader);
         group.setName(name);
         update(group, new QueryWrapper<VGroup>().lambda().eq(VGroup::getId, groupId));
+    }
+
+    @Override
+    public void assignEV4GroupUsers(Integer userId, Integer groupId, Map<Integer, Double> scores) {
+        VGroup vGroup = baseMapper.selectById(groupId);
+        // check whether groupLeader
+        if (!userId.equals(vGroup.getGroupLeader()))
+            throw new BadRequestException("No Authority: User(userId="+userId+") isn't the GroupLeader");
+        if (!vGroup.getChecked().equals(2))
+            throw new BadRequestException("GroupTask hasn't been checked");
+        List<User> userList = inGroupMapper.getUsersInGroup(groupId);
+        // get GroupTask total EV
+        Integer ev = getTask_groupId(groupId).getEv();
+        for (User user : userList) {
+            if (!scores.containsKey(user.getId())) {
+                throw new BadRequestException("GroupUsers doesn't match");
+            } else {
+                Double score = scores.get(user.getId());
+                // assign user EV
+                user.setEv(user.getEv() + ev * score);
+                userMapper.updateById(user);
+            }
+        }
     }
 
     @Override

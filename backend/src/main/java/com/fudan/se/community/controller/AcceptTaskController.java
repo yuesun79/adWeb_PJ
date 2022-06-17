@@ -31,7 +31,7 @@ public class AcceptTaskController {
 
     @Autowired
     InGroupService inGroupService;
-    
+
     @ApiOperation(value="用户接受个人任务",notes = "insert accept table")
     @ApiResponses({
             @ApiResponse(code = 200, message = "接受任务成功"),
@@ -139,7 +139,10 @@ public class AcceptTaskController {
     })
     @RequestMapping(value = "/submitGroupTask/exp", method = RequestMethod.PUT)
     public ResponseEntity<Object> assignEV(@RequestBody AssignEVRequest assignEVRequest) {
-        return null;
+        vGroupService.assignEV4GroupUsers(assignEVRequest.getUserId(),
+                assignEVRequest.getGroupId(),
+                assignEVRequest.getScore());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

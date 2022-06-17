@@ -96,6 +96,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
     @Override
     public void insertTask(com.fudan.se.community.pojo.task.Task task) {
         // 未审核状态
+        //  task.setTeamSize()
         task.setValidity(0);
         int influenceRows = baseMapper.insert(task);
         if (influenceRows==0) {

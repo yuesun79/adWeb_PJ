@@ -9,5 +9,5 @@ public class AssignEVRequest {
     private Integer userId;
     private Integer groupId;
     // 试试吧不知道对不对
-    private Map<Integer, Integer> score;
+    private Map<Integer, Double> score;
 }

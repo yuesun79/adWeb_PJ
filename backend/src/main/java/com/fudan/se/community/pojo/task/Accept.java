@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
 import io.swagger.models.auth.In;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -23,6 +24,7 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @ApiModel(value="Accept对象", description="")
+@NoArgsConstructor
 public class Accept implements Serializable {
 
     private static final long serialVersionUID=1L;
@@ -34,14 +36,14 @@ public class Accept implements Serializable {
 
     private Integer taskId;
 
-    private Integer process;
+    private Integer checked;
 
     private String file;
 public Accept(Integer process){
-    this.process=process;
+    this.checked=process;
 }
-    public Accept(Integer process, String file) {
-        this.process = process;
+    public Accept(Integer checked, String file) {
+        this.checked = checked;
         this.file = file;
     }
 
@@ -50,11 +52,11 @@ public Accept(Integer process){
         this.taskId = taskId;
     }
 
-    public Accept(Integer id, Integer userId, Integer taskId, Integer process, String file) {
+    public Accept(Integer id, Integer userId, Integer taskId, Integer checked, String file) {
         this.id = id;
         this.userId = userId;
         this.taskId = taskId;
-        this.process = process;
+        this.checked = checked;
         this.file = file;
     }
 }
