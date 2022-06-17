@@ -3,7 +3,7 @@ package com.fudan.se.community.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fudan.se.community.controller.response.TasksResponse;
 import com.fudan.se.community.pojo.vm.Task;
-
+import com.fudan.se.community.pojo.vm.unfinishTask;
 import java.util.List;
 
 public interface TaskService extends IService<com.fudan.se.community.pojo.task.Task> {
@@ -23,7 +23,7 @@ public interface TaskService extends IService<com.fudan.se.community.pojo.task.T
 
     List<com.fudan.se.community.pojo.vm.Task> retrieveAllTasks_unchecked();
 
-    List<Task> retrieveAllTasks_unfinishedPersonal();
+    List<unfinishTask> retrieveAllTasks_unfinishedPersonal();
 
     List<Task> retrieveAllTasks_unfinishedGroup();
 

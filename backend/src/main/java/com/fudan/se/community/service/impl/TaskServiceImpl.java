@@ -10,6 +10,7 @@ import com.fudan.se.community.mapper.VGroupMapper;
 import com.fudan.se.community.pojo.task.Accept;
 import com.fudan.se.community.pojo.task.group.VGroup;
 import com.fudan.se.community.pojo.user.User;
+import com.fudan.se.community.pojo.vm.unfinishTask;
 import com.fudan.se.community.service.*;
 import com.fudan.se.community.pojo.vm.GroupTask;
 import com.fudan.se.community.pojo.vm.Task;
@@ -156,18 +157,19 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
     }
 
     @Override
-    public List<Task> retrieveAllTasks_unfinishedPersonal() {
+    public List<unfinishTask> retrieveAllTasks_unfinishedPersonal() {
         QueryWrapper wrapper = new QueryWrapper();
         wrapper.le("checked",1);//相当于小于等于1
 
         List<Accept> listAccept = acceptMapper.selectList(wrapper);
-        List<Task> list = new ArrayList<Task>();
+        List<unfinishTask> res= new ArrayList<unfinishTask>();
         for(int i =0 ;i<listAccept.size();i++){
-            Task tem =taskMapper.findTask_id(listAccept.get(i).getTaskId());
+            com.fudan.se.community.pojo.task.Task temTask =taskMapper.selectById(listAccept.get(i).getTaskId());
             System.out.println(listAccept.get(i).getTaskId());
-            list.add(tem);
+            unfinishTask tem1 =new unfinishTask(temTask,listAccept.get(i));
+            res.add(tem1);
         }
-        return list;
+        return res;
     }
 
     @Override

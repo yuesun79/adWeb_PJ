@@ -9,6 +9,7 @@ import com.fudan.se.community.service.RoomService;
 import com.fudan.se.community.service.UserService;
 import com.fudan.se.community.service.VClassService;
 import com.fudan.se.community.pojo.vm.Task;
+import com.fudan.se.community.pojo.vm.unfinishTask;
 import com.fudan.se.community.service.TaskService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -126,8 +127,8 @@ public class RetrieveInfoController {
     })
     //  task list /userAccept 是否已经被accept
     @RequestMapping(value = "admin/retrieveTasks/unfinishedPersonal", method = RequestMethod.GET)
-    public ResponseEntity<List<Task>> retrieveTasks_unfinishedPersonal() {
-        List<Task> res = taskService.retrieveAllTasks_unfinishedPersonal();
+    public ResponseEntity<List<unfinishTask>> retrieveTasks_unfinishedPersonal() {
+        List<unfinishTask> res = taskService.retrieveAllTasks_unfinishedPersonal();
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
