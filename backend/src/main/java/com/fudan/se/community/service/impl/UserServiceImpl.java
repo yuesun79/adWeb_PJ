@@ -1,5 +1,6 @@
 package com.fudan.se.community.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.fudan.se.community.dto.LoginDto;
 import com.fudan.se.community.dto.RegisterDto;
 import com.fudan.se.community.exception.BadRequestException;
@@ -95,6 +96,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setStatus(status);
         if (userMapper.updateById(user) == 0)
             throw new BadRequestException("User(userId="+userId+") doesn't exist");
+    }
+
+    @Override
+    public void cutEv(int userId, Integer ev) {
+        User user =baseMapper.selectById(userId);
+        double oldEv =user.getEv();
+       if (oldEv<ev){
+           throw new BadRequestException("Ev is less than needed!");
+       }else {
+           double newEv =oldEv-ev;
+           UpdateWrapper updateWrapper = new UpdateWrapper();
+           updateWrapper.eq("id", userId);
+           updateWrapper.set("ev", newEv);
+           baseMapper.update( null,updateWrapper);
+       }
+
+
+    }
+
+    @Override
+    public void addEv(int userId, int ev) {
+        User user =baseMapper.selectById(userId);
+        double oldEv =user.getEv();
+        double newEv =oldEv+ev;
+        UpdateWrapper updateWrapper = new UpdateWrapper();
+        updateWrapper.eq("id", userId);
+        updateWrapper.set("ev", newEv);
+        baseMapper.update( null,updateWrapper);
     }
 
 

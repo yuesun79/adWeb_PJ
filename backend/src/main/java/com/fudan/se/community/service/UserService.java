@@ -24,4 +24,8 @@ public interface UserService extends IService<User> {
     User retrieveUserInfo(Integer userId);
 
     void changeUserInfo(Integer userId, String status);
+
+    void cutEv(int userId, Integer ev);
+
+    void addEv(int userId, int ev);
 }
