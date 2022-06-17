@@ -125,7 +125,10 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
             UpdateWrapper updateWrapper = new UpdateWrapper();
             updateWrapper.eq("id", taskId);
             updateWrapper.set("validity", 1);   //审核通过
-           baseMapper.update((com.fudan.se.community.pojo.task.Task) null,updateWrapper);
+          int t= baseMapper.update((com.fudan.se.community.pojo.task.Task) null,updateWrapper);
+            if (t<=0)
+                throw new BadRequestException("Task's(TaskId="+ taskId +") has some wrong");
+
         }
     }
 
@@ -171,9 +174,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
     public List<Task> retrieveAllTasks_unfinishedFree(int userId) {
         QueryWrapper wrapper = new QueryWrapper();
         wrapper.eq("is_free",1);//等于1的自由任务
-
         List<com.fudan.se.community.pojo.task.Task> listFreeTask = taskMapper.selectList(wrapper); //所有自由任务列表
-
         List<Accept> list = new ArrayList<Accept>();
         for(int i =0 ;i<listFreeTask.size();i++){
             QueryWrapper wrapper1 = new QueryWrapper();
@@ -191,6 +192,40 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
             listTask.add(tem);
         }
         return listTask;
+    }
+
+   //给个人任务的个人增加经验值
+    @Override
+    public void addPersonalEv(int userId, int taskId) {
+        QueryWrapper wrapper1 = new QueryWrapper();
+        wrapper1.eq("task_id",taskId);
+        wrapper1.eq("user_id",userId);
+        List<Accept> listcompletionTask = acceptMapper.selectList(wrapper1);
+        if (listcompletionTask.size()==0){
+            throw new BadRequestException("Task not accept or complete");
+        }else {
+            Task task =taskMapper.findTask_id(taskId);
+            int taskEv =task.getEv();
+            userService.addEv(userId,taskEv);
+        }
+    }
+    //给发布个人任务的个人减少经验值
+    @Override
+    public void cutPersonalEv(int userId, Integer ev) {
+      userService.cutEv(userId,ev);
+    }
+    //
+    @Override
+    public void addGroupEv(int userId, int ev) {
+        userService.addEv(userId,ev);
+    }
+
+    @Override
+    public List<Task> retrieveAllTasks_free() {
+        QueryWrapper wrapper1 = new QueryWrapper();
+        wrapper1.eq("is_Free",1);
+        List<Task> listFreeTask = taskMapper.selectList(wrapper1);
+        return listFreeTask;
     }
 
 }

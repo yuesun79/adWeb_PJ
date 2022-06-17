@@ -73,6 +73,18 @@ public class RetrieveInfoController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
+    @ApiOperation(value="获取所有自由的任务",notes = "select task table join accept join user")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "", response = TasksResponse.class),
+            @ApiResponse(code = 400, message = "some database or other wrong")
+    })
+    @RequestMapping(value = "/retrieveTasks/free", method = RequestMethod.GET)
+    public ResponseEntity<List<Task>> retrieveTasks_free() {
+        List<Task> res = taskService.retrieveAllTasks_free();
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+
     @ApiOperation(value="获取某用户信息",notes = "select user table")
     @ApiResponses({
             @ApiResponse(code = 200, message = "", response = User.class),

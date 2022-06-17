@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS task (
 	team_size TINYINT,
 	ddl TIMESTAMP,
 	validity TINYINT DEFAULT(0), # 0未审核 1审核通过 2任务过期 3审核不通过
-          isFree TINYINT DEFAULT(0), # 0非自由任务（老师助教发布)  1自由任务（学生发布）
+          is_free TINYINT DEFAULT(0), # 0非自由任务（老师助教发布)  1自由任务（学生发布）
 	PRIMARY KEY (id),
 	FOREIGN KEY(publisher_id) REFERENCES user(id)
 );
@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS accept (
 	id INT UNSIGNED AUTO_INCREMENT NOT NULL,
 	user_id INT UNSIGNED NOT NULL,
 	task_id INT UNSIGNED NOT NULL, 
-	process TINYINT DEFAULT(0), # 0进行中 1已提交 2已完成 3超时
+	checked TINYINT DEFAULT(0), # 0进行中 1已提交 2已完成 3超时
 	file VARCHAR(200),
 	PRIMARY KEY (id),
 	FOREIGN KEY(user_id) REFERENCES user(id),
@@ -98,7 +98,8 @@ CREATE TABLE IF NOT EXISTS v_group (
 	name VARCHAR(40) DEFAULT(""),
 	task_id INT UNSIGNED,
 	group_leader INT UNSIGNED,
-	process TINYINT DEFAULT(0), # 0进行中 1已提交 2已完成 3超时
+          checked TINYINT DEFAULT(0), # 0进行中 1已提交 2已完成 3超时
+	process TINYINT DEFAULT(0), #组队情况
 	file varchar(200),
 	PRIMARY KEY (id),
 	FOREIGN KEY(task_id) REFERENCES task(id),

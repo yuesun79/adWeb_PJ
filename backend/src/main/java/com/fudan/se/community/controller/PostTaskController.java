@@ -1,5 +1,6 @@
 package com.fudan.se.community.controller;
 
+import com.fudan.se.community.controller.request.task.post.AddGroupEvRequest;
 import com.fudan.se.community.controller.request.task.post.CheckGTaskCompleteRequest;
 import com.fudan.se.community.controller.request.task.post.CheckPTaskCompleteRequest;
 import com.fudan.se.community.controller.request.task.post.CreatTaskRequest;
@@ -67,6 +68,10 @@ public class PostTaskController {
         //插入class-Task数据
         classTaskService.insertClassTask(classTask);
 
+       //扣除创建者的经验值
+        int userId =creatTaskRequest.userId;
+        taskService.cutPersonalEv(userId,creatTaskRequest.ev);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -82,6 +87,7 @@ public class PostTaskController {
         int userId =checkPTaskCompleteRequest.getUserId();  //接受任务的学生id
         int taskId =checkPTaskCompleteRequest.getTaskId();  //已完成的任务id
         acceptService.checkCompletion(userId,taskId);
+        taskService.addPersonalEv(userId,taskId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -152,7 +158,7 @@ public class PostTaskController {
     @ApiOperation(value="管理员审核自由任务",notes = "update task table")
     @ApiResponses({
             @ApiResponse(code = 200, message = ""),
-            @ApiResponse(code = 400, message = "信息不对balabala")
+            @ApiResponse(code = 400, message = "信息不对")
     })
 
     @RequestMapping(value = "admin/checkFreeTask", method = RequestMethod.PUT)
@@ -173,6 +179,8 @@ public class PostTaskController {
         int userId =checkPTaskCompleteRequest.getUserId();
         int taskId =checkPTaskCompleteRequest.getTaskId();
         acceptService.checkCompletion(userId,taskId);
+        //给个人添加经验值
+        taskService.addPersonalEv(userId,taskId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -182,18 +190,38 @@ public class PostTaskController {
             @ApiResponse(code = 200, message = ""),
             @ApiResponse(code = 400, message = "信息不对balabala")
     })
-
     @RequestMapping(value = "admin/checkCompletion/groupTask", method = RequestMethod.PUT)
     public ResponseEntity<Object> checkCompletion_group(@RequestBody CheckGTaskCompleteRequest checkGTaskCompleteRequest) {
       // int userId =checkGTaskCompleteRequest.getUserId();
-       //int taskId =checkGTaskCompleteRequest.getTaskId();
+       //int taskId =checkGTaskCompleteRequest.getTaskId(); 暂不需要
        int groupId =checkGTaskCompleteRequest.getGroupId();
 
        //审核团队任务
        vGroupService.checkCompletion(groupId);
+
+       //给团队里所有成员添加不同经验值，需队长单独调用addaddGroupEv接口
+
        //删除房间与组号的组合表
        occupyService.romove(groupId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
+    @ApiOperation(value="队长加分",notes = "update accept table")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = ""),
+            @ApiResponse(code = 400, message = "信息不对balabala")
+    })
+
+    @RequestMapping(value = "addGroupEv", method = RequestMethod.POST)
+    public ResponseEntity<Object> checkCompletion_personal(@RequestBody AddGroupEvRequest addGroupEvRequest) {
+        int userId =addGroupEvRequest.getUserId();
+        int ev =addGroupEvRequest.getEv();
+
+        //给个人添加经验值
+        taskService.addGroupEv(userId,ev);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
