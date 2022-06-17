@@ -52,6 +52,6 @@ public class Task implements Serializable {
 
     private Integer validity;
 
-    private Integer is_free; //是否为个人发布的自由任务，1代表是，0代表不是。
+    private Integer isFree; //是否为个人发布的自由任务，1代表是，0代表不是。
 
 }

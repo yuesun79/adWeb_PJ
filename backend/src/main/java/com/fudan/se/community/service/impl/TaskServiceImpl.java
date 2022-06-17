@@ -109,7 +109,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
     @Override
     public void adminInsertTask(com.fudan.se.community.pojo.task.Task task) {
         // 管理者发布的任务，审核状态已通过
-        task.setIs_free(0); //不是自由发布的任务。
+        task.setIsFree(0); //不是自由发布的任务。
         task.setValidity(1);
         int influenceRows = baseMapper.insert(task);
         if (influenceRows==0) {
