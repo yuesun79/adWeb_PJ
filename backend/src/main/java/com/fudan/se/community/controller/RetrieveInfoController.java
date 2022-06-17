@@ -138,9 +138,9 @@ public class RetrieveInfoController {
     })
     // todo 构造response
     // 想象了一下前端 task/userAccept
-    @RequestMapping(value = "/retrieveTasks/unfinishedFree", method = RequestMethod.GET)
+    @RequestMapping(value = "/retrieveTasks/unfinishedFree", method = RequestMethod.POST)
     public ResponseEntity<List<Task>> retrieveTasks_unfinishedFree(@RequestParam Integer userId) {
-        List<Task> res = taskService.retrieveAllTasks_unfinishedFree();
+        List<Task> res = taskService.retrieveAllTasks_unfinishedFree(userId);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 

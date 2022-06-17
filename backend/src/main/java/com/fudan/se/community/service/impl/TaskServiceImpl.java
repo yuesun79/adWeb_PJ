@@ -97,6 +97,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
     public void insertTask(com.fudan.se.community.pojo.task.Task task) {
         // 未审核状态
         //  task.setTeamSize()
+        task.setIs_free(1); //是自由发布的任务
         task.setValidity(0);
         int influenceRows = baseMapper.insert(task);
         if (influenceRows==0) {
@@ -107,6 +108,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
     @Override
     public void adminInsertTask(com.fudan.se.community.pojo.task.Task task) {
         // 管理者发布的任务，审核状态已通过
+        task.setIs_free(0); //不是自由发布的任务。
         task.setValidity(1);
         int influenceRows = baseMapper.insert(task);
         if (influenceRows==0) {
@@ -137,7 +139,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
     @Override
     public List<Task> retrieveAllTasks_unfinishedPersonal() {
         QueryWrapper wrapper = new QueryWrapper();
-        wrapper.le("process",1);//相当于小于等于1
+        wrapper.le("checked",1);//相当于小于等于1
 
         List<Accept> listAccept = acceptMapper.selectList(wrapper);
         List<Task> list = new ArrayList<Task>();
@@ -165,8 +167,29 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
     }
 
     @Override
-    public List<Task> retrieveAllTasks_unfinishedFree() {
-        return null;
+    public List<Task> retrieveAllTasks_unfinishedFree(int userId) {
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("is_free",1);//等于1的自由任务
+
+        List<com.fudan.se.community.pojo.task.Task> listFreeTask = taskMapper.selectList(wrapper); //所有自由任务列表
+
+        List<Accept> list = new ArrayList<Accept>();
+        for(int i =0 ;i<listFreeTask.size();i++){
+            QueryWrapper wrapper1 = new QueryWrapper();
+            wrapper1.eq("task_id",listFreeTask.get(i).getId());
+            wrapper1.eq("user_id",userId);
+            wrapper1.le("checked",1);//小于等于1,即未完成的
+            List<Accept> listFreeUncompletionTask = acceptMapper.selectList(wrapper1);
+           for (int j =0;j<listFreeUncompletionTask.size();j++){
+               list.add(listFreeUncompletionTask.get(j));  //所有未完成的已经accept的自由任务列表
+           }
+        }
+        List<Task> listTask = new ArrayList<Task>();
+        for(int i =0 ;i<list.size();i++){  //根据accept表寻找符合条件的task
+            Task tem =taskMapper.findTask_id(list.get(i).getTaskId());
+            listTask.add(tem);
+        }
+        return listTask;
     }
 
 }

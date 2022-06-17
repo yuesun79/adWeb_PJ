@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS task (
 	team_size TINYINT,
 	ddl TIMESTAMP,
 	validity TINYINT DEFAULT(0), # 0未审核 1审核通过 2任务过期 3审核不通过
+          isFree TINYINT DEFAULT(0), # 0非自由任务（老师助教发布)  1自由任务（学生发布）
 	PRIMARY KEY (id),
 	FOREIGN KEY(publisher_id) REFERENCES user(id)
 );
