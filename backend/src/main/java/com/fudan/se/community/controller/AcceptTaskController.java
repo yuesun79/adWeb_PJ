@@ -130,12 +130,13 @@ public class AcceptTaskController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // TODO: 2022/4/26
     // 组长 获取当前组的组员信息（个人贡献）
     @ApiOperation(value="组长分配经验值",notes = "update process in group table(group_id), update EV in user table")
     @ApiResponses({
             @ApiResponse(code = 200, message = "已提交"),
-            @ApiResponse(code = 400, message = "组员信息有误")
+            @ApiResponse(code = 400, message = "\"No Authority: User(userId=\"+userId+\") isn't the GroupLeader\"" +
+                    "\"GroupTask hasn't been checked\"" +
+                    "\"GroupUsers doesn't match\"")
     })
     @RequestMapping(value = "/submitGroupTask/exp", method = RequestMethod.PUT)
     public ResponseEntity<Object> assignEV(@RequestBody AssignEVRequest assignEVRequest) {

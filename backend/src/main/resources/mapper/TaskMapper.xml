@@ -24,8 +24,9 @@
 
     <select id="retrieveTasks_userId_inGroup" resultType="com.fudan.se.community.pojo.vm.GroupTask" parameterType="Integer">
         SELECT task.*,
-        user.username as publisherName, user.email as publisherEmail, user.phone_num as publisherPhone,
-        G.name as groupName, G.group_leader groupLeader, G.process groupProcess, G.group_id groupId
+        user1.username as publisherName, user1.email as publisherEmail, user1.phone_num as publisherPhone,
+        G.name as groupName, G.group_leader groupLeader, G.process groupProcess, G.group_id groupId, G.file file,
+        user2.username as leaderName, user1.email as leaderEmail, user1.phone_num as leaderPhone
         FROM task
             JOIN
             (SELECT *
@@ -35,7 +36,8 @@
                 ON g.id = GroupID.group_id
             ) as G
             ON task.id = G.task_id
-        JOIN user ON task.publisher_id = user.id;
+        JOIN user user1 ON task.publisher_id = user1.id
+        JOIN user user2 ON G.group_leader = user2.id;
     </select>
     <select id="findTask_id" resultType="com.fudan.se.community.pojo.vm.Task">
         SELECT  task.*, user.username publisherName, user.email publisherEmail, user.phone_num publisherPhone

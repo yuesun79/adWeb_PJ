@@ -28,7 +28,7 @@ public class PostTaskController {
 
     // todo：
     @RequestMapping(value = "/createFreeTask", method = RequestMethod.PUT)
-    public ResponseEntity<Object> createFreeTask(Task task) {
+    public ResponseEntity<Object> createFreeTask(Integer classId, Task task) {
         taskService.insertTask(task);
         return new ResponseEntity<>(HttpStatus.OK);
     }

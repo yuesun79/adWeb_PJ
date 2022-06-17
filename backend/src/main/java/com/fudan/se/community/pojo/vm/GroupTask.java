@@ -13,5 +13,9 @@ public class GroupTask extends Task {
     private String groupName;
     private Integer groupLeader;
     private Integer groupProcess;
-    private Blob file;
+    private String file;
+
+    String leaderName;
+    String leaderEmail;
+    String leaderPhone;
 }

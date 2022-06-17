@@ -70,6 +70,9 @@ public class VGroupServiceImpl extends ServiceImpl<VGroupMapper, VGroup> impleme
         // check whether groupLeader
         if (!userId.equals(vGroup.getGroupLeader()))
             throw new BadRequestException("No Authority: User(userId="+userId+") isn't the GroupLeader");
+        // check teamSize
+//        if (vGroup.getProcess() < getTask_groupId(groupId).getTeamSize())
+//            throw new BadRequestException("Haven't meet the teamSize");
         //todo: check upload file in cloud
         String fileName = FileUtil.upload(file, request);
         log.info("--------->filename:"+fileName);
