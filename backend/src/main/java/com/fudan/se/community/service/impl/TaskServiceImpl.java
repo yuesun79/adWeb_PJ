@@ -219,4 +219,12 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
         userService.addEv(userId,ev);
     }
 
+    @Override
+    public List<Task> retrieveAllTasks_free() {
+        QueryWrapper wrapper1 = new QueryWrapper();
+        wrapper1.eq("is_Free",1);
+        List<Task> listFreeTask = taskMapper.selectList(wrapper1);
+        return listFreeTask;
+    }
+
 }

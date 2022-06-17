@@ -34,4 +34,6 @@ public interface TaskService extends IService<com.fudan.se.community.pojo.task.T
     void cutPersonalEv(int userId, Integer ev);
 
     void addGroupEv(int userId, int ev);
+
+    List<Task> retrieveAllTasks_free();
 }
