@@ -4,43 +4,45 @@
 
     <select id="retrieveTask_classId" resultType="com.fudan.se.community.pojo.vm.Task" parameterType="Integer">
         SELECT task.*,
-        user.username as publisherName, user.email as publisherEmail, user.phone_num as publisherPhone
+               user.username as publisherName, user.email as publisherEmail, user.phone_num as publisherPhone
         FROM task
-        JOIN class_task r ON task.id = r.task_id
-        JOIN user ON task.publisher_id = user.id
+                 JOIN class_task r ON task.id = r.task_id
+                 JOIN user ON task.publisher_id = user.id
         WHERE r.class_id = #{classId}
     </select>
 
     <select id="retrieveTasks_userId_accept" resultType="com.fudan.se.community.pojo.vm.Task" parameterType="Integer">
         SELECT task.*,
-        user.username as publisherName, user.email as publisherEmail, user.phone_num as publisherPhone
+               user.username as publisherName, user.email as publisherEmail, user.phone_num as publisherPhone
         FROM task
-            JOIN
-            (SELECT task_id
-            FROM accept WHERE user_id = #{userId}) as TaskId
-            ON task.id = TaskId.task_id
-        JOIN user ON task.publisher_id = user.id;
+                 JOIN
+             (SELECT task_id
+              FROM accept WHERE user_id = #{userId}) as TaskId
+             ON task.id = TaskId.task_id
+                 JOIN user ON task.publisher_id = user.id;
     </select>
 
     <select id="retrieveTasks_userId_inGroup" resultType="com.fudan.se.community.pojo.vm.GroupTask" parameterType="Integer">
         SELECT task.*,
-        user.username as publisherName, user.email as publisherEmail, user.phone_num as publisherPhone,
-        G.name as groupName, G.group_leader groupLeader, G.process groupProcess, G.group_id groupId
+               user1.username as publisherName, user1.email as publisherEmail, user1.phone_num as publisherPhone,
+               G.name as groupName, G.group_leader groupLeader, G.process groupProcess, G.group_id groupId, G.file file,
+               user2.username as leaderName, user2.email as leaderEmail, user2.phone_num as leaderPhone
         FROM task
-            JOIN
-            (SELECT *
-            FROM v_group as g
-                RIGHT JOIN
-                (SELECT group_id FROM in_group as r WHERE r.user_id = #{userId}) as GroupId
-                ON g.id = GroupID.group_id
-            ) as G
-            ON task.id = G.task_id
-        JOIN user ON task.publisher_id = user.id;
+                 JOIN
+             (SELECT *
+              FROM v_group as g
+                       RIGHT JOIN
+                       (SELECT group_id FROM in_group as r WHERE r.user_id = #{userId}) as GroupId
+                       ON g.id = GroupID.group_id
+             ) as G
+             ON task.id = G.task_id
+                 JOIN user user1 ON task.publisher_id = user1.id
+                 LEFT JOIN user user2 ON G.group_leader = user2.id;
     </select>
     <select id="findTask_id" resultType="com.fudan.se.community.pojo.vm.Task">
         SELECT  task.*, user.username publisherName, user.email publisherEmail, user.phone_num publisherPhone
         FROM task
-        LEFT JOIN user ON task.publisher_id = user.id
+                 LEFT JOIN user ON task.publisher_id = user.id
         WHERE task.id = #{taskId}
     </select>
 
