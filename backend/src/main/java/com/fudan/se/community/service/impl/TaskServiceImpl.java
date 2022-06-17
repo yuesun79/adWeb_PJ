@@ -5,18 +5,17 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.fudan.se.community.controller.response.TasksResponse;
 import com.fudan.se.community.exception.BadRequestException;
 import com.fudan.se.community.mapper.AcceptMapper;
+import com.fudan.se.community.mapper.UserMapper;
 import com.fudan.se.community.mapper.VGroupMapper;
 import com.fudan.se.community.pojo.task.Accept;
 import com.fudan.se.community.pojo.task.group.VGroup;
-import com.fudan.se.community.service.UserService;
+import com.fudan.se.community.pojo.user.User;
+import com.fudan.se.community.service.*;
 import com.fudan.se.community.pojo.vm.GroupTask;
 import com.fudan.se.community.pojo.vm.Task;
 
 import com.fudan.se.community.mapper.TaskMapper;
-import com.fudan.se.community.service.ClassTaskService;
-import com.fudan.se.community.service.TaskService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fudan.se.community.service.VClassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +42,8 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
     TaskMapper taskMapper;
     @Autowired
     UserService userService;
+    @Autowired
+    UserMapper userMapper;
     @Autowired
     AcceptMapper acceptMapper;
   @Autowired
@@ -133,11 +134,25 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
     }
 
     @Override
-    public List<Task> retrieveAllTasks_unchecked() {
+    public List<com.fudan.se.community.pojo.vm.Task> retrieveAllTasks_unchecked() {
         QueryWrapper wrapper = new QueryWrapper();
         wrapper.eq("validity",0);//相当于where id=1
-        List<Task> list = taskMapper.selectList(wrapper);
-       return list;
+        List<com.fudan.se.community.pojo.task.Task> list = taskMapper.selectList(wrapper);
+        List<User> liastUser =new ArrayList<>();
+        for (int i=0;i<list.size();i++){
+            QueryWrapper wrapper1 = new QueryWrapper();
+            wrapper1.eq("id",list.get(i).getPublisherId());//相当于where id=1
+            List<User> list1 = userMapper.selectList(wrapper1);
+            liastUser.add(list1.get(0));
+        }
+        List<com.fudan.se.community.pojo.vm.Task> listVm=new ArrayList<>();
+        for (int i=0;i<list.size();i++) {
+
+            com.fudan.se.community.pojo.vm.Task tem =new com.fudan.se.community.pojo.vm.Task(liastUser.get(i),list.get(i));
+            listVm.add(tem);
+        }
+
+       return listVm;
     }
 
     @Override

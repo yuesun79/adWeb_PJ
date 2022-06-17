@@ -113,8 +113,8 @@ public class RetrieveInfoController {
             @ApiResponse(code = 400, message = "userId不对")
     })
     @RequestMapping(value = "admin/retrieveTasks/uncheck", method = RequestMethod.GET)
-    public ResponseEntity<List<Task>> retrieveTasks_unchecked() {
-        List<Task> res = taskService.retrieveAllTasks_unchecked();
+    public ResponseEntity<List<com.fudan.se.community.pojo.vm.Task>> retrieveTasks_unchecked() {
+        List<com.fudan.se.community.pojo.vm.Task> res = taskService.retrieveAllTasks_unchecked();
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 

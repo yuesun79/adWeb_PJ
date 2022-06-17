@@ -21,7 +21,7 @@ public interface TaskService extends IService<com.fudan.se.community.pojo.task.T
 
     void adminChecked(int taskId);
 
-    List<Task> retrieveAllTasks_unchecked();
+    List<com.fudan.se.community.pojo.vm.Task> retrieveAllTasks_unchecked();
 
     List<Task> retrieveAllTasks_unfinishedPersonal();
 
