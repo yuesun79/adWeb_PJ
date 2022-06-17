@@ -31,7 +31,7 @@ public class AcceptTaskController {
 
     @Autowired
     InGroupService inGroupService;
-    
+
     @ApiOperation(value="用户接受个人任务",notes = "insert accept table")
     @ApiResponses({
             @ApiResponse(code = 200, message = "接受任务成功"),

@@ -59,4 +59,12 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room> implements Ro
         return vGroupService.getTask_groupId(groupId).getTeamSize();
     }
 
+    @Override
+    public void insert(Room room) {
+        int influenceRows = baseMapper.insert(room);
+        if (influenceRows==0) {
+            throw new BadRequestException("room setup fails");
+        }
+    }
+
 }

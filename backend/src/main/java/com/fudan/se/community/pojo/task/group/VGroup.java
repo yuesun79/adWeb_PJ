@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author SY
@@ -26,7 +26,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 public class VGroup implements Serializable {
 
-    private static final long serialVersionUID=1L;
+    private static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
@@ -44,7 +44,8 @@ public class VGroup implements Serializable {
     private String file;
 
 
-    public VGroup(Integer taskId) {
-        this.taskId = taskId;
+
+    public VGroup(Integer Checked){
+        this.checked=Checked;
     }
 }

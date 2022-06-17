@@ -24,4 +24,8 @@ public class ClassTaskService extends ServiceImpl<ClassTaskMapper, ClassTask> {
                 .eq(ClassTask::getClassId, classId);
         return getOne(wrapper).getTaskId();
     }
+
+    public void insertClassTask(ClassTask classTask) {
+        baseMapper.insert(classTask);
+    }
 }

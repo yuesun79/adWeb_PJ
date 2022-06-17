@@ -18,4 +18,6 @@ public interface RoomService extends IService<Room> {
     Integer getGroupId_roomId(Integer roomId);
     List<User> findUsersInRoom(Integer roomId);
     Integer getTeamSize_roomId(Integer roomId);
+
+    void insert(Room room);
 }

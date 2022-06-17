@@ -86,7 +86,8 @@ public class InGroupServiceImpl extends ServiceImpl<InGroupMapper, InGroup> impl
         Room room = new Room();
         room.setName("new room");
         if (oldGroup.size() == 0) {
-            VGroup group1 = new VGroup(taskId);
+            VGroup group1 = new VGroup();
+            group1.setTaskId(taskId);
             vGroupMapper.insert(group1);
             // insert room
             roomMapper.insert(room);
@@ -105,7 +106,7 @@ public class InGroupServiceImpl extends ServiceImpl<InGroupMapper, InGroup> impl
 
         VGroup vGroup = vGroupMapper.selectOne(new QueryWrapper<VGroup>()
                 .lambda().eq(VGroup::getId, groupId)
-                .lt(VGroup::getProcess, teamSize)); // VGroup::getProcess小于
+                .lt(VGroup::getChecked, teamSize)); // VGroup::getProcess小于
         if (vGroup == null) {
             throw new BadRequestException("Group(GroupId="+groupId+")doesn't exist or already has enough people");
         }
@@ -117,7 +118,7 @@ public class InGroupServiceImpl extends ServiceImpl<InGroupMapper, InGroup> impl
         }
         baseMapper.insert(inGroup);
         // update memberNum
-        vGroup.setProcess(vGroup.getProcess()+1);
+        vGroup.setChecked(vGroup.getChecked()+1);
         vGroupMapper.update(vGroup, new QueryWrapper<VGroup>()
                 .lambda().eq(VGroup::getId,vGroup.getId()));
         return inGroup.getId();

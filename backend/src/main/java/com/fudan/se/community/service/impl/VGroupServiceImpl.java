@@ -48,6 +48,15 @@ public class VGroupServiceImpl extends ServiceImpl<VGroupMapper, VGroup> impleme
     @Autowired
     UserMapper userMapper;
 
+    @Override
+    public void checkCompletion(int groupId) {
+        if(!this.update(
+                new VGroup(2),
+                new QueryWrapper<VGroup>().lambda()
+                        .eq(VGroup::getId, groupId)))
+            throw new BadRequestException("group doesn't complete this Task dont exist");
+        System.out.println("------------删除成功");
+    }
 
     @Override
     public Integer getRoomId_groupId(Integer groupId) {
@@ -77,6 +86,7 @@ public class VGroupServiceImpl extends ServiceImpl<VGroupMapper, VGroup> impleme
         String fileName = FileUtil.upload(file, request);
         log.info("--------->filename:"+fileName);
         // set checked, fileName
+
         vGroup.setChecked(1);
         vGroup.setFile(fileName);
         if(!this.update(vGroup,
@@ -134,6 +144,15 @@ public class VGroupServiceImpl extends ServiceImpl<VGroupMapper, VGroup> impleme
                 user.setEv(user.getEv() + ev * score);
                 userMapper.updateById(user);
             }
+        }
+    }
+
+
+    @Override
+    public void insert(VGroup vGroup) {
+        int influenceRows = baseMapper.insert(vGroup);
+        if (influenceRows==0) {
+            throw new BadRequestException("Vgroup setup fails");
         }
     }
 }

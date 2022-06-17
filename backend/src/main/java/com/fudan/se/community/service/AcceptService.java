@@ -17,4 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 public interface AcceptService extends IService<Accept> {
     Integer acceptTask_personal(Integer userId, Integer taskId);
     void submitTask_personal(Integer userId, Integer taskId, MultipartFile file, HttpServletRequest request);
+
+    void checkCompletion(int userId, int taskId);
 }

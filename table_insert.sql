@@ -1,10 +1,10 @@
-INSERT INTO user (username, email, phone_num, password, ev, register_date) VALUES
-	("teacherM", "teacherM@qq.com", "13925677739", "teacher1234", 0, CURRENT_TIMESTAMP()),
-	("taM", "taM@qq.com", "17725677739", "ta1234", 0, CURRENT_TIMESTAMP()),
-	("tuna", "tuna@qq.com", "18925677739", "pass1234", 0, CURRENT_TIMESTAMP()),
-	("chips", "chips@qq.com", "19946752244", "pass1234", 0, CURRENT_TIMESTAMP()),
-	("student1", "student1@qq.com", "19943545344", "pass1234", 0, CURRENT_TIMESTAMP()),
-	("student2", "student2@qq.com", "13494675221", "pass1234", 0, CURRENT_TIMESTAMP());
+INSERT INTO user (username, email, phone_num, password, ev, register_date,gender) VALUES
+	("teacherM", "teacherM@qq.com", "13925677739", "teacher1234", 0, CURRENT_TIMESTAMP(),"man"),
+	("taM", "taM@qq.com", "17725677739", "ta1234", 0, CURRENT_TIMESTAMP(),"man"),
+	("tuna", "tuna@qq.com", "18925677739", "pass1234", 0, CURRENT_TIMESTAMP(),"man"),
+	("chips", "chips@qq.com", "19946752244", "pass1234", 0, CURRENT_TIMESTAMP(),"man"),
+	("student1", "student1@qq.com", "19943545344", "pass1234", 0, CURRENT_TIMESTAMP(),"man"),
+	("student2", "student2@qq.com", "13494675221", "pass1234", 0, CURRENT_TIMESTAMP(),"man");
 INSERT INTO v_class (name, course_name) VALUES
 	("class1", "Advanced Web"),
 	("class2", "Computer Graphics"),

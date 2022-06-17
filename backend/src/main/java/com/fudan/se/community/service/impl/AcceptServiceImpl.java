@@ -69,7 +69,16 @@ public class AcceptServiceImpl extends ServiceImpl<AcceptMapper, Accept> impleme
                         .eq(Accept::getTaskId, taskId)))
             throw new BadRequestException("User doesn't accept this Personal Task before");
     }
-
+     //检查是否已完成
+    @Override
+    public void checkCompletion(int userId, int taskId) {
+        if(!this.update(
+                new Accept(2),
+                new QueryWrapper<Accept>().lambda()
+                        .eq(Accept::getUserId, userId)
+                        .eq(Accept::getTaskId, taskId)))
+            throw new BadRequestException("User doesn't complete this Personal Task before");
+    }
 
 
     public String getTaskProcess(Integer process) {

@@ -101,8 +101,9 @@ public class RetrieveInfoController {
             @ApiResponse(code = 400, message = "userId不对")
     })
     @RequestMapping(value = "admin/retrieveTasks/uncheck", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, Object>> retrieveTasks_unchecked() {
-        return null;
+    public ResponseEntity<List<Task>> retrieveTasks_unchecked() {
+        List<Task> res = taskService.retrieveAllTasks_unchecked();
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     // ADMIN // CHECK COMPLETION //
@@ -111,11 +112,11 @@ public class RetrieveInfoController {
             @ApiResponse(code = 200, message = ""),
             @ApiResponse(code = 400, message = "userId不对")
     })
-    // todo 构造response
-    // 想象了一下前端 task/userAccept
+    //  task list /userAccept 是否已经被accept
     @RequestMapping(value = "admin/retrieveTasks/unfinishedPersonal", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, Object>> retrieveTasks_unfinishedPersonal() {
-        return null;
+    public ResponseEntity<List<Task>> retrieveTasks_unfinishedPersonal() {
+        List<Task> res = taskService.retrieveAllTasks_unfinishedPersonal();
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @ApiOperation(value="管理员获取未审核完成度的团队任务",notes = "select task + group + accept + user")
@@ -123,11 +124,11 @@ public class RetrieveInfoController {
             @ApiResponse(code = 200, message = ""),
             @ApiResponse(code = 400, message = "userId不对")
     })
-    // todo 构造response
     // 想象了一下前端 task/group/userAccept
     @RequestMapping(value = "admin/retrieveTasks/unfinishedGroup", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, Object>> retrieveTasks_unfinishedGroup() {
-        return null;
+    public ResponseEntity<List<Task>> retrieveTasks_unfinishedGroup() {
+        List<Task> res = taskService.retrieveAllTasks_unfinishedGroup();
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @ApiOperation(value="user获取未审核完成度的自由任务",notes = "select task + accept + user")
@@ -137,9 +138,10 @@ public class RetrieveInfoController {
     })
     // todo 构造response
     // 想象了一下前端 task/userAccept
-    @RequestMapping(value = "/retrieveTasks/unfinishedFree", method = RequestMethod.GET)
-    public ResponseEntity<Map<String, Object>> retrieveTasks_unfinishedFree(@RequestParam Integer userId) {
-        return null;
+    @RequestMapping(value = "/retrieveTasks/unfinishedFree", method = RequestMethod.POST)
+    public ResponseEntity<List<Task>> retrieveTasks_unfinishedFree(@RequestParam Integer userId) {
+        List<Task> res = taskService.retrieveAllTasks_unfinishedFree(userId);
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
 

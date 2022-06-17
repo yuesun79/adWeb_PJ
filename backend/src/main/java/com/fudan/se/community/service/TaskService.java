@@ -17,4 +17,15 @@ public interface TaskService extends IService<com.fudan.se.community.pojo.task.T
 
     void insertTask(com.fudan.se.community.pojo.task.Task task);
 
+    void adminInsertTask(com.fudan.se.community.pojo.task.Task task);
+
+    void adminChecked(int taskId);
+
+    List<Task> retrieveAllTasks_unchecked();
+
+    List<Task> retrieveAllTasks_unfinishedPersonal();
+
+    List<Task> retrieveAllTasks_unfinishedGroup();
+
+    List<Task> retrieveAllTasks_unfinishedFree( int userId);
 }

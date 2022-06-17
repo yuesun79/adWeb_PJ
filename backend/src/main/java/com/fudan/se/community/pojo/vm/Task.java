@@ -24,4 +24,6 @@ public class Task {
     private String publisherName;
     private String publisherEmail;
     private String publisherPhone;
+
+    private Integer is_free; //是否为个人发布的自由任务，1代表是，0代表不是。
 }
