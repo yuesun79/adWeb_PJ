@@ -71,8 +71,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public String isExist(RegisterDto ro) {
-        if(userMapper.selectByUsername(ro.getUsername())!=null){
+    public String isExist(String userName) {
+        if(userMapper.selectByUsername(userName)!=null){
             return "用户名已经存在";
         }
         return "ok";

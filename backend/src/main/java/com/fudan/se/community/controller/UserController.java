@@ -87,14 +87,12 @@ public class UserController {
 
 
     @RequestMapping("/username")
-    public CommonResult username(@RequestBody RegisterDto registerDto){
-        log.info(registerDto.toString());
-
-        String ans = userService.isExist(registerDto);
+    public ResponseEntity<Object> username(String userName){
+        String ans = userService.isExist(userName);
         if(ans.equals("用户名已经存在")){
             throw new BadRequestException(ans);
         }
-       return CommonResult.success(ans);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @ApiOperation(value="用户修改状态",notes = "update user table")

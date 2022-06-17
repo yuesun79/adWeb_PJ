@@ -19,7 +19,7 @@ public interface UserService extends IService<User> {
 
     String login(LoginDto loginDto);
 
-    String isExist(RegisterDto registerDto);
+    String isExist(String userName);
 
     User retrieveUserInfo(Integer userId);
 
