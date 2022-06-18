@@ -1,6 +1,6 @@
 package com.fudan.se.community.service;
 
-import com.fudan.se.community.pojo.image.Image;
+
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -11,6 +11,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @author SY
  * @since 2022-04-28
  */
-public interface ImageService extends IService<Image> {
+public interface ImageService  {
 
 }

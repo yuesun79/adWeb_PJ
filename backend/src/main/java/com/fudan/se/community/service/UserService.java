@@ -1,7 +1,7 @@
 package com.fudan.se.community.service;
 
-import com.fudan.se.community.dto.LoginDto;
-import com.fudan.se.community.dto.RegisterDto;
+import com.fudan.se.community.controller.dto.LoginDto;
+import com.fudan.se.community.controller.dto.RegisterDto;
 import com.fudan.se.community.pojo.user.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 

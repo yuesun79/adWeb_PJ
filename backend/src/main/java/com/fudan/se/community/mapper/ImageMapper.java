@@ -1,6 +1,6 @@
 package com.fudan.se.community.mapper;
 
-import com.fudan.se.community.pojo.image.Image;
+
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -15,6 +15,6 @@ import org.springframework.stereotype.Repository;
  */
 @Mapper
 @Repository
-public interface ImageMapper extends BaseMapper<Image> {
+public interface ImageMapper  {
 
 }

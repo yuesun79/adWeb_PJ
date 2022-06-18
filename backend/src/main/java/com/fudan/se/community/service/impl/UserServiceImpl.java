@@ -1,8 +1,8 @@
 package com.fudan.se.community.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.fudan.se.community.dto.LoginDto;
-import com.fudan.se.community.dto.RegisterDto;
+import com.fudan.se.community.controller.dto.LoginDto;
+import com.fudan.se.community.controller.dto.RegisterDto;
 import com.fudan.se.community.exception.BadRequestException;
 import com.fudan.se.community.pojo.user.User;
 import com.fudan.se.community.mapper.UserMapper;

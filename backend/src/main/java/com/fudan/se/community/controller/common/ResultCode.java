@@ -1,4 +1,4 @@
-package com.fudan.se.community.common;
+package com.fudan.se.community.controller.common;
 
 import lombok.Getter;
 

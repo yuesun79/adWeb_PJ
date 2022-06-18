@@ -2,10 +2,8 @@ package com.fudan.se.community.controller;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.fudan.se.community.common.CommonResult;
-import com.fudan.se.community.controller.request.task.ListGroupTasksRequest;
-import com.fudan.se.community.dto.LoginDto;
-import com.fudan.se.community.dto.RegisterDto;
+import com.fudan.se.community.controller.dto.LoginDto;
+import com.fudan.se.community.controller.dto.RegisterDto;
 import com.fudan.se.community.exception.BadRequestException;
 import com.fudan.se.community.pojo.user.User;
 import com.fudan.se.community.service.UserService;

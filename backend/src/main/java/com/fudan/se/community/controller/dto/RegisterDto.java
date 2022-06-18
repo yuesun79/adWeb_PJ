@@ -1,4 +1,4 @@
-package com.fudan.se.community.dto;
+package com.fudan.se.community.controller.dto;
 
 
 import lombok.Data;
