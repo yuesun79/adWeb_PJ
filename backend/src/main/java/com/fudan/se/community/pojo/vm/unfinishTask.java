@@ -56,7 +56,7 @@ public class unfinishTask {
        this.publisher_id = pubUser.getId();
        this.publiser_phone = pubUser.getPhoneNum();
        this.publisher_name = pubUser.getUsername();
-          if (!accept.getFile().equals("")) {
+          if (accept.getFile()!=null) {
               this.uploaderId=user.getId();
               this.uploaderUsername = user.getUsername();
               this.uploaderEmail = user.getEmail();

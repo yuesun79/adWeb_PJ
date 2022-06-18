@@ -66,7 +66,7 @@ public class unfinishGTask {
         this.publisher_id = pubUser.getId();
         this.publiser_phone = pubUser.getPhoneNum();
         this.publisher_name = pubUser.getUsername();
-        if (!group.getFile().equals("")) {
+        if (group.getFile()!=null) {
             this.uploaderId=user.getId();
             this.uploaderUsername = user.getUsername();
             this.uploaderEmail = user.getEmail();
