@@ -169,7 +169,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
 
             User pubUser =userMapper.selectById(temTask.getPublisherId());   //发布任务者
             User upUser =new User();
-            if (listAccept.get(i).getFile()!=null){
+            if (!listAccept.get(i).getFile().equals("")){
                 upUser=userMapper.selectById(listAccept.get(i).getUserId());  //上传文件者
             }
             unfinishTask tem1 =new unfinishTask(temTask,listAccept.get(i),pubUser,upUser);
@@ -190,7 +190,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
             com.fudan.se.community.pojo.task.Task temTask =taskMapper.selectById(listAccept.get(i).getTaskId());
             User pubUser =userMapper.selectById(temTask.getPublisherId());
             User upUser =new User();
-            if (listAccept.get(i).getFile()!=null){
+            if (!listAccept.get(i).getFile().equals("")){
                 upUser=userMapper.selectById(listAccept.get(i).getGroupLeader());  //上传文件者
             }
             unfinishGTask tem1 =new unfinishGTask(temTask,listAccept.get(i),pubUser,upUser);
@@ -221,7 +221,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
             com.fudan.se.community.pojo.task.Task temTask =taskMapper.selectById(list.get(i).getTaskId());
             User pubUser =userMapper.selectById(temTask.getPublisherId());   //发布任务者
             User upUser =new User();
-            if (list.get(i).getFile()!=null){
+            if (!list.get(i).getFile().equals("")){
                 upUser=userMapper.selectById(list.get(i).getUserId());  //上传文件者
             }
             unfinishTask tem1 =new unfinishTask(temTask,list.get(i),pubUser,upUser);
