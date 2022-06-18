@@ -1,6 +1,7 @@
 package com.fudan.se.community.controller;
 
 import com.baomidou.mybatisplus.extension.api.R;
+import com.fudan.se.community.annotation.AdminLoginToken;
 import com.fudan.se.community.controller.response.ClassResponse;
 import com.fudan.se.community.controller.response.PTasksMapResponse;
 import com.fudan.se.community.controller.response.TasksResponse;
@@ -114,6 +115,7 @@ public class RetrieveInfoController {
             @ApiResponse(code = 200, message = ""),
             @ApiResponse(code = 400, message = "userId不对")
     })
+    @AdminLoginToken
     @RequestMapping(value = "admin/retrieveTasks/uncheck", method = RequestMethod.GET)
     public ResponseEntity<List<com.fudan.se.community.pojo.vm.Task>> retrieveTasks_unchecked() {
         List<com.fudan.se.community.pojo.vm.Task> res = taskService.retrieveAllTasks_unchecked();
@@ -127,6 +129,7 @@ public class RetrieveInfoController {
             @ApiResponse(code = 400, message = "userId不对")
     })
     //  task list /userAccept 是否已经被accept
+    @AdminLoginToken
     @RequestMapping(value = "admin/retrieveTasks/unfinishedPersonal", method = RequestMethod.GET)
     public ResponseEntity<List<unfinishTask>> retrieveTasks_unfinishedPersonal() {
         List<unfinishTask> res = taskService.retrieveAllTasks_unfinishedPersonal();
@@ -139,6 +142,7 @@ public class RetrieveInfoController {
             @ApiResponse(code = 400, message = "userId不对")
     })
     // 想象了一下前端 task/group/userAccept
+    @AdminLoginToken
     @RequestMapping(value = "admin/retrieveTasks/unfinishedGroup", method = RequestMethod.GET)
     public ResponseEntity<List<unfinishGTask>> retrieveTasks_unfinishedGroup() {
         List<unfinishGTask> res = taskService.retrieveAllTasks_unfinishedGroup();
@@ -150,8 +154,6 @@ public class RetrieveInfoController {
             @ApiResponse(code = 200, message = ""),
             @ApiResponse(code = 400, message = "userId不对")
     })
-    // todo 构造response
-    // 想象了一下前端 task/userAccept
     @RequestMapping(value = "/retrieveTasks/unfinishedFree", method = RequestMethod.POST)
     public ResponseEntity<List<unfinishTask>> retrieveTasks_unfinishedFree(@RequestParam Integer userId) {
         List<unfinishTask> res = taskService.retrieveAllTasks_unfinishedFree(userId);

@@ -54,4 +54,22 @@ public class TokenUtil {
     }
 
 
+    public static boolean verifyAdmin(String token) {
+        try {
+            JWTVerifier verifier = JWT.require(Algorithm.HMAC256(TOKEN_SECRET)).withIssuer("auth0").build();
+            DecodedJWT jwt = verifier.verify(token);
+            System.out.println("认证通过：");
+            System.out.println("username: " + jwt.getClaim("username").asString());
+            String username =jwt.getClaim("username").asString();
+            System.out.println("过期时间：      " + jwt.getExpiresAt());
+           if (!username.equals("teacherM")&&!username.equals("taM")){
+               return false;
+           }else {
+               return true;
+           }
+        } catch (Exception e){
+            System.out.println("token验证不成功。");
+            return false;
+        }
+    }
 }

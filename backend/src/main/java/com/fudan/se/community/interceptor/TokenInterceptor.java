@@ -1,12 +1,12 @@
 package com.fudan.se.community.interceptor;
 
 
+import com.fudan.se.community.annotation.AdminLoginToken;
 import com.fudan.se.community.annotation.PassToken;
-import com.fudan.se.community.annotation.UserLoginToken;
+import com.fudan.se.community.exception.TokenFail;
 import com.fudan.se.community.util.TokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
-import org.springframework.context.annotation.Bean;
 import org.springframework.web.method.HandlerMethod;
 
 
@@ -40,11 +40,27 @@ public class TokenInterceptor implements HandlerInterceptor {
         }
 
         // 检查该方法上是否有 PassToken 的注解
-        System.out.println(method.isAnnotationPresent(PassToken.class));
-        if (method.isAnnotationPresent(PassToken.class)) {
-            PassToken passToken = method.getAnnotation(PassToken.class);
+        System.out.println(method.isAnnotationPresent(AdminLoginToken.class));
+        if (method.isAnnotationPresent(AdminLoginToken.class)) {
+            AdminLoginToken passToken = method.getAnnotation(AdminLoginToken.class);
             if (passToken.required()) {
-                return true;
+                response.setCharacterEncoding("UTF-8");
+                String token = request.getHeader("Token"); //Authorization
+                boolean result = TokenUtil.verify(token);
+                boolean isAdmin = TokenUtil.verifyAdmin(token);
+                if (result&&isAdmin){
+                    return true;
+                }else {
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("message", "You are not a teacher or ta,or token has failed!");
+                    jsonObject.put("code", 402);
+                    response.getWriter().append(jsonObject.toString());
+                    response.setStatus(402);
+                    response.setContentType("You are not a teacher or ta,or token has failed!");
+                    return false;
+
+                }
+
             }
         } else {
             response.setCharacterEncoding("UTF-8");
