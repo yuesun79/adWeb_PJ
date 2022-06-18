@@ -25,8 +25,8 @@ public class unfinishGTask {
     private Integer checked;
     private String file;
     private String groupName;
-    private int groupLeader;
-    private int process;
+    private Integer groupLeader;
+    private Integer process;
 
     public unfinishGTask(){
 
@@ -47,13 +47,13 @@ public class unfinishGTask {
         this.file = group.getFile();
         this.groupName = group.getName();
         if (group.getGroupLeader()==null){
-            this.groupLeader=0;
+            this.groupLeader=null;
         }else {
             this.groupLeader=group.getGroupLeader();
         }
 
         if (group.getProcess()==null){
-            this.process=0;
+            this.process=null;
         }else {
             this.process = group.getProcess();
         }
