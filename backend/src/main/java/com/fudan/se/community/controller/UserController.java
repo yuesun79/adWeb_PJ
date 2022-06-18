@@ -106,5 +106,27 @@ public class UserController {
         userService.changeUserInfo(userId, status);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @ApiOperation(value="老师助教登录",notes = "check user")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Welcome teacher！"),
+            @ApiResponse(code = 400, message = "You are not a teacher or password is wrong！")
+    })
+    @RequestMapping(value = "/adminLogin", method = RequestMethod.POST)
+    public ResponseEntity<Map<String, Object>> acceptPersonalTask(@RequestBody LoginDto loginDto) {
+        String ans=userService.adminLogin(loginDto);
+        if(ans.equals("admin success")){
+            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq(loginDto.getUsername() != null, "username", loginDto.getUsername());
+            User user = userService.getOne(queryWrapper);
+            String s = MD5Utils.code(loginDto.getPassword());
+            String token = TokenUtil.sign(new User(loginDto.getUsername(),s));
+            Map<String,Object> hs =new HashMap<>();
+            hs.put("token",token);
+            hs.put("userId",user.getId());
+            return new ResponseEntity<Map<String, Object>>(hs, HttpStatus.OK);
+        }
+        throw new BadRequestException(ans);
+    }
 }
 

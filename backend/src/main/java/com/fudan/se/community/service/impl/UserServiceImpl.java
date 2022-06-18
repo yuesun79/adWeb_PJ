@@ -69,6 +69,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         return "密码错误";
     }
+    @Override
+    public String adminLogin(LoginDto loginDto) {
+    String username=loginDto.getUsername();
+    if (!username.equals("teacherM")&&!username.equals("taM")){
+        throw new BadRequestException("You are not a teacher or ta!");
+    }else {
+        String pd = userMapper.selectPdByUsername(loginDto.getUsername());
+        if(pd.equals(loginDto.getPassword())){
+            return "admin success";
+        }else {
+            throw new BadRequestException("password is wrong!");
+        }
+    }
+    }
 
     @Override
     public String isExist(String userName) {
@@ -125,6 +139,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         updateWrapper.set("ev", newEv);
         baseMapper.update( null,updateWrapper);
     }
+
 
 
     /**

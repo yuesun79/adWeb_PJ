@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @Data
 @ToString
 public class unfinishTask {
-    private Integer taskid;
+    private Integer id;
     private String name;
     private String description;
     private Integer ev;
@@ -33,7 +33,7 @@ public class unfinishTask {
        this.validity=task.getValidity();
        this.name=task.getName();
        this.teamSize=task.getTeamSize();
-       this.taskid=task.getId();
+       this.id=task.getId();
        this.optional=task.getOptional();
        this.checked=accept.getChecked();
        this.file=accept.getFile();
