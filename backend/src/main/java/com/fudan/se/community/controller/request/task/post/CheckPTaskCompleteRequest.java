@@ -4,6 +4,8 @@ import lombok.Data;
 
 @Data
 public class CheckPTaskCompleteRequest {
+     private Integer nowId;
      private Integer userId;
      private Integer taskId;
+     private String username;
 }

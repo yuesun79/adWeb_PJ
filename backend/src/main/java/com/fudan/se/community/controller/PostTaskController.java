@@ -5,16 +5,22 @@ import com.fudan.se.community.controller.request.task.post.AddGroupEvRequest;
 import com.fudan.se.community.controller.request.task.post.CheckGTaskCompleteRequest;
 import com.fudan.se.community.controller.request.task.post.CheckPTaskCompleteRequest;
 import com.fudan.se.community.controller.request.task.post.CreatTaskRequest;
+import com.fudan.se.community.exception.BadRequestException;
+import com.fudan.se.community.mapper.TaskMapper;
+import com.fudan.se.community.mapper.UserMapper;
+import com.fudan.se.community.pojo.message.TaskMessage;
 import com.fudan.se.community.pojo.task.ClassTask;
 import com.fudan.se.community.pojo.task.Task;
 import com.fudan.se.community.pojo.task.group.Occupy;
 import com.fudan.se.community.pojo.task.group.Room;
 import com.fudan.se.community.pojo.task.group.VGroup;
+import com.fudan.se.community.pojo.user.User;
 import com.fudan.se.community.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +43,10 @@ public class PostTaskController {
     RoomService roomService;
     @Autowired
     AcceptService acceptService;
-
+    @Autowired
+    TaskMapper taskMapper;
+    @Autowired
+    UserMapper userMapper;
     /** post **/
     // student 需要验证 只能是个人任务
     @ApiOperation(value="发布自由任务",notes = "insert task table")
@@ -87,6 +96,13 @@ public class PostTaskController {
     public ResponseEntity<Object> checkCompletion_free(@RequestBody CheckPTaskCompleteRequest checkPTaskCompleteRequest) {
         int userId =checkPTaskCompleteRequest.getUserId();  //接受任务的学生id
         int taskId =checkPTaskCompleteRequest.getTaskId();  //已完成的任务id
+        int nowId=checkPTaskCompleteRequest.getNowId();
+        Task temTask =taskMapper.selectById(taskId);
+        Integer pubUserId =temTask.getPublisherId() ;
+        String nowUserName=checkPTaskCompleteRequest.getUsername();
+        if (!nowUserName.equals("teacherM")&&!nowUserName.equals("taM")&&nowId!=pubUserId){
+            throw new BadRequestException("you are not a tearch or ta or publisher");
+        }
         acceptService.checkCompletion(userId,taskId);
         taskService.addPersonalEv(userId,taskId);
         return new ResponseEntity<>(HttpStatus.OK);

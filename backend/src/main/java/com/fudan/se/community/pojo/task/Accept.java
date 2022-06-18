@@ -42,8 +42,8 @@ public class Accept implements Serializable {
 
     private String path;
 
-    public Accept(Integer process){
-    this.checked=process;
+    public Accept(Integer checked){
+    this.checked=checked;
 }
 
     public Accept(Integer checked, String file) {

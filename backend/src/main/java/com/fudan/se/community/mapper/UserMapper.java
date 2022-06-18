@@ -22,4 +22,6 @@ public interface UserMapper extends BaseMapper<User> {
 
     @Select("select password from user where username = #{username}")
     String selectPdByUsername(String username);
+
+    User selectByID(int nowId);
 }
