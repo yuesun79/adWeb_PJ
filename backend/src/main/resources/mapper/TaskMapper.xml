@@ -33,7 +33,7 @@
             FROM v_group as g
                 RIGHT JOIN
                 (SELECT group_id FROM in_group as r WHERE r.user_id = #{userId}) as GroupId
-                ON g.id = GroupID.group_id
+                ON g.id = GroupId.group_id
             ) as G
             ON task.id = G.task_id
         JOIN user user1 ON task.publisher_id = user1.id

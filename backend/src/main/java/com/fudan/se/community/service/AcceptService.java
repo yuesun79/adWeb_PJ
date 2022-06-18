@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>
@@ -16,7 +17,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface AcceptService extends IService<Accept> {
     Integer acceptTask_personal(Integer userId, Integer taskId);
-    void submitTask_personal(Integer userId, Integer taskId, MultipartFile file, HttpServletRequest request);
+    Integer submitTask_personal(Integer userId, Integer taskId, MultipartFile file, HttpServletRequest request);
 
+    byte[] getFile(Integer userId, Integer taskId);
     void checkCompletion(int userId, int taskId);
 }

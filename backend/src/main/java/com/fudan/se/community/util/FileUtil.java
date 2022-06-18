@@ -1,14 +1,12 @@
 package com.fudan.se.community.util;
 
+import com.fudan.se.community.exception.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -31,7 +29,7 @@ public class FileUtil {
         if(!directory.exists()){
             directory.mkdirs();
         }
-        log.info(directory.getAbsoluteFile().toString());
+        log.info("----->directory:" + directory.getAbsoluteFile().toString());
         String SaveUrl = "/files/" + year + "_" + month+"_"+day+"/";
         Date dt = new Date();
         Random random = new Random();
@@ -43,7 +41,8 @@ public class FileUtil {
         int pos = name.lastIndexOf(".");
         //获取文件名后缀Fi
         String ext = name.substring(pos);
-        String baseName=FileNameAuto+name;
+        String baseName = FileNameAuto + name;
+        log.info("--------->baseName:"+baseName);
         OutputStream outputStream =null;
         try {
             outputStream = new FileOutputStream(SavePath+baseName);
@@ -61,7 +60,8 @@ public class FileUtil {
                 e.printStackTrace();
             }
         }
-        return SaveUrl+baseName;
+        ////
+        return directory.getAbsoluteFile() + "/" + baseName;
     }
 
     //删除
@@ -70,5 +70,29 @@ public class FileUtil {
                 "/")+filename;
         File file = new File(f);
         file.delete();
+    }
+    
+    public static byte[] download(String path) {
+        byte[] buffer;
+        try {
+            File file = new File(path);
+            log.info(file.getPath());
+            // 获取文件名
+            String filename = file.getName();
+            // 获取文件后缀名
+            String ext = filename.substring(filename.lastIndexOf(".") + 1).toLowerCase();
+            log.info("文件后缀名：" + ext);
+    
+            // 将文件写入输入流
+            FileInputStream fileInputStream = new FileInputStream(file);
+            InputStream fis = new BufferedInputStream(fileInputStream);
+            buffer = new byte[fis.available()];
+            fis.read(buffer);
+            fis.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new BadRequestException("Read file error");
+        }
+        return buffer;
     }
 }

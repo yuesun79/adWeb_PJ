@@ -9,11 +9,13 @@ import com.fudan.se.community.util.FileUtil;
 import com.fudan.se.community.service.AcceptService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fudan.se.community.pojo.vm.Task;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author SY
  * @since 2022-04-28
  */
+@Slf4j
 @Service
 public class AcceptServiceImpl extends ServiceImpl<AcceptMapper, Accept> implements AcceptService {
 
@@ -55,21 +58,41 @@ public class AcceptServiceImpl extends ServiceImpl<AcceptMapper, Accept> impleme
     // todo: 管理员修改ddl
     // todo: 显示/下载已上传文件
     @Override
-    public void submitTask_personal(Integer userId, Integer taskId, MultipartFile file, HttpServletRequest request) {
+    public Integer submitTask_personal(Integer userId, Integer taskId, MultipartFile file, HttpServletRequest request) {
         // check whether is overdue
         taskService.checkOverDue(taskId);
         //todo: check upload file in cloud
-        String fileName = FileUtil.upload(file, request);
-        log.debug("--------->filename:"+fileName);
+        String absoluteFileName = FileUtil.upload(file, request);
+        String fileName = file.getOriginalFilename();
+        log.info("--------->absoluteFilename:"+absoluteFileName);
+        log.info("--------->filename:"+fileName);
+
+        Accept accept = new Accept();
+        accept.setChecked(1);
+        accept.setFile(fileName);
+        accept.setPath(absoluteFileName);
+
         // update
         if(!this.update(
-                new Accept(1, fileName),
+                accept,
                 new QueryWrapper<Accept>().lambda()
                         .eq(Accept::getUserId, userId)
                         .eq(Accept::getTaskId, taskId)))
             throw new BadRequestException("User doesn't accept this Personal Task before");
+        return accept.getId();
     }
-     //检查是否已完成
+
+    @Override
+    public byte[] getFile(Integer userId, Integer taskId) {
+        Accept accept = baseMapper.selectOne(new QueryWrapper<Accept>().lambda()
+                .eq(Accept::getUserId, userId)
+                .eq(Accept::getTaskId, taskId));
+        if (accept == null)
+            throw new BadRequestException("User doesn't accept this Personal Task before");
+        return FileUtil.download(accept.getPath());
+    }
+
+    //检查是否已完成
     @Override
     public void checkCompletion(int userId, int taskId) {
         if(!this.update(

@@ -43,7 +43,7 @@ public class VGroup implements Serializable {
 
     private String file;
 
-
+    private String path;
 
     public VGroup(Integer Checked){
         this.checked=Checked;

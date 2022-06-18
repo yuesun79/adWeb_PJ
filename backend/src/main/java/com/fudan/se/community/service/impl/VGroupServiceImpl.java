@@ -82,17 +82,31 @@ public class VGroupServiceImpl extends ServiceImpl<VGroupMapper, VGroup> impleme
         // check teamSize
 //        if (vGroup.getProcess() < getTask_groupId(groupId).getTeamSize())
 //            throw new BadRequestException("Haven't meet the teamSize");
-        //todo: check upload file in cloud
-        String fileName = FileUtil.upload(file, request);
+        // todo: check upload file in cloud
+        // 数据库
+        String absoluteFileName = FileUtil.upload(file, request);
+        String fileName = file.getOriginalFilename();
+        log.info("--------->absoluteFilename:"+absoluteFileName);
         log.info("--------->filename:"+fileName);
         // set checked, fileName
 
         vGroup.setChecked(1);
         vGroup.setFile(fileName);
+        vGroup.setProcess(vGroup.getProcess()+1);
+        vGroup.setPath(absoluteFileName);
+
         if(!this.update(vGroup,
                 new QueryWrapper<VGroup>().lambda()
                         .eq(VGroup::getId, groupId)))
             throw new BadRequestException("User doesn't accept this Group Task before");
+    }
+
+    @Override
+    public byte[] getFile(Integer userId, Integer groupId) {
+        VGroup vGroup = baseMapper.selectById(groupId);
+        if (vGroup == null)
+            throw new BadRequestException("User doesn't accept this Group Task before");
+        return FileUtil.download(vGroup.getPath());
     }
 
     @Override

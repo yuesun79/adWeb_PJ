@@ -6,9 +6,12 @@ spring:
   #数据库配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://106.15.170.212:3300/communityDB  #communityDB_copy
+#    username: root
+#    password: 123456
     url: jdbc:mysql://localhost:3306/communityDB  #communityDB_copy
     username: root
-    password:
+    password: 100279Sy
 #    Springfox使用的路径匹配是基于AntPathMatcher的，而Spring Boot 2.6.X使用的是PathPatternMatcher。
   mvc:
     pathmatch:
@@ -16,6 +19,7 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/communityDB?gssapiServiceName=mongodb
+#      uri: mongodb://admin:123456@106.15.170.212:27017/communityDB?gssapiServiceName=mongodb
 
 # mybatis-plus .mapper文件配置
 mybatis-plus:
