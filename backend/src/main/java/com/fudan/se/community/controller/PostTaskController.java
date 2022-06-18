@@ -1,5 +1,6 @@
 package com.fudan.se.community.controller;
 
+import com.fudan.se.community.annotation.AdminLoginToken;
 import com.fudan.se.community.controller.request.task.post.AddGroupEvRequest;
 import com.fudan.se.community.controller.request.task.post.CheckGTaskCompleteRequest;
 import com.fudan.se.community.controller.request.task.post.CheckPTaskCompleteRequest;
@@ -45,7 +46,7 @@ public class PostTaskController {
             @ApiResponse(code = 400, message = "userId不对/信息不全等")
     })
 
-    // todo：
+
     @RequestMapping(value = "/createFreeTask", method = RequestMethod.PUT)
 
     public ResponseEntity<Object> createFreeTask(@RequestBody CreatTaskRequest creatTaskRequest) {
@@ -98,6 +99,7 @@ public class PostTaskController {
             @ApiResponse(code = 400, message = "userId不对/信息不全等")
     })
 
+    @AdminLoginToken
     @RequestMapping(value = "admin/createPersonalTask", method = RequestMethod.POST)
     public ResponseEntity<Object> createPersonalTask(@RequestBody CreatTaskRequest creatTaskRequest) {
         System.out.println("------调用成功");
@@ -120,6 +122,7 @@ public class PostTaskController {
             @ApiResponse(code = 200, message = ""),
             @ApiResponse(code = 400, message = "userId不对/信息不全等")
     })
+    @AdminLoginToken
     @RequestMapping(value = "admin/createGroupTask", method = RequestMethod.POST)
     public ResponseEntity<Object> createGroupTask(@RequestBody CreatTaskRequest creatTaskRequest) {
         System.out.println("------调用成功");
@@ -160,7 +163,7 @@ public class PostTaskController {
             @ApiResponse(code = 200, message = ""),
             @ApiResponse(code = 400, message = "信息不对")
     })
-
+    @AdminLoginToken
     @RequestMapping(value = "admin/checkFreeTask", method = RequestMethod.PUT)
     public ResponseEntity<Object> checkFreeTask(@RequestParam Integer taskId) {
         taskService.adminChecked(taskId);
@@ -173,7 +176,7 @@ public class PostTaskController {
             @ApiResponse(code = 200, message = ""),
             @ApiResponse(code = 400, message = "信息不对balabala")
     })
-
+    @AdminLoginToken
     @RequestMapping(value = "admin/checkCompletion/personalTask", method = RequestMethod.PUT)
     public ResponseEntity<Object> checkCompletion_personal(@RequestBody CheckPTaskCompleteRequest checkPTaskCompleteRequest) {
         int userId =checkPTaskCompleteRequest.getUserId();
@@ -190,6 +193,7 @@ public class PostTaskController {
             @ApiResponse(code = 200, message = ""),
             @ApiResponse(code = 400, message = "信息不对balabala")
     })
+    @AdminLoginToken
     @RequestMapping(value = "admin/checkCompletion/groupTask", method = RequestMethod.PUT)
     public ResponseEntity<Object> checkCompletion_group(@RequestBody CheckGTaskCompleteRequest checkGTaskCompleteRequest) {
       // int userId =checkGTaskCompleteRequest.getUserId();
