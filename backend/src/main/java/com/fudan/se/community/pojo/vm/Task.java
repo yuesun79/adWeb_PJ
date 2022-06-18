@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @ToString
 public class Task {
     // task + publisher_user
-    private Integer taskid;
+    private Integer id;
     private String name;
     private String description;
     private Integer ev;
@@ -38,7 +38,7 @@ public class Task {
      this.validity=task.getValidity();
      this.name=task.getName();
      this.teamSize=task.getTeamSize();
-     this.taskid=task.getId();
+     this.id=task.getId();
      this.optional=task.getOptional();
 
      this.publisherEmail=user.getEmail();

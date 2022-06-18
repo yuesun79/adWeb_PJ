@@ -10,6 +10,7 @@ import com.fudan.se.community.mapper.VGroupMapper;
 import com.fudan.se.community.pojo.task.Accept;
 import com.fudan.se.community.pojo.task.group.VGroup;
 import com.fudan.se.community.pojo.user.User;
+import com.fudan.se.community.pojo.vm.unfinishGTask;
 import com.fudan.se.community.pojo.vm.unfinishTask;
 import com.fudan.se.community.service.*;
 import com.fudan.se.community.pojo.vm.GroupTask;
@@ -173,22 +174,23 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
     }
 
     @Override
-    public List<Task> retrieveAllTasks_unfinishedGroup() {
+    public List<unfinishGTask> retrieveAllTasks_unfinishedGroup() {
         QueryWrapper wrapper = new QueryWrapper();
         wrapper.le("checked",1);//相当于小于等于1
 
         List<VGroup> listAccept = vGroupMapper.selectList(wrapper);
         List<Task> list = new ArrayList<Task>();
+        List<unfinishGTask> res= new ArrayList<unfinishGTask>();
         for(int i =0 ;i<listAccept.size();i++){
-            Task tem =taskMapper.findTask_id(listAccept.get(i).getTaskId());
-            System.out.println(listAccept.get(i).getTaskId());
-            list.add(tem);
+            com.fudan.se.community.pojo.task.Task temTask =taskMapper.selectById(listAccept.get(i).getTaskId());
+            unfinishGTask tem1 =new unfinishGTask(temTask,listAccept.get(i));
+            res.add(tem1);
         }
-        return list;
+        return res;
     }
 
     @Override
-    public List<Task> retrieveAllTasks_unfinishedFree(int userId) {
+    public List<unfinishTask> retrieveAllTasks_unfinishedFree(int userId) {
         QueryWrapper wrapper = new QueryWrapper();
         wrapper.eq("is_free",1);//等于1的自由任务
         List<com.fudan.se.community.pojo.task.Task> listFreeTask = taskMapper.selectList(wrapper); //所有自由任务列表
@@ -204,11 +206,13 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
            }
         }
         List<Task> listTask = new ArrayList<Task>();
+        List<unfinishTask> res= new ArrayList<unfinishTask>();
         for(int i =0 ;i<list.size();i++){  //根据accept表寻找符合条件的task
-            Task tem =taskMapper.findTask_id(list.get(i).getTaskId());
-            listTask.add(tem);
+            com.fudan.se.community.pojo.task.Task temTask =taskMapper.selectById(list.get(i).getTaskId());
+            unfinishTask tem1 =new unfinishTask(temTask,list.get(i));
+            res.add(tem1);
         }
-        return listTask;
+        return res;
     }
 
    //给个人任务的个人增加经验值
