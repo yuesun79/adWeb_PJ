@@ -28,4 +28,6 @@ public interface UserService extends IService<User> {
     void cutEv(int userId, Integer ev);
 
     void addEv(int userId, int ev);
+
+    String adminLogin(LoginDto loginDto);
 }

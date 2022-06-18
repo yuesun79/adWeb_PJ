@@ -5,6 +5,7 @@ import com.fudan.se.community.controller.response.ClassResponse;
 import com.fudan.se.community.controller.response.PTasksMapResponse;
 import com.fudan.se.community.controller.response.TasksResponse;
 import com.fudan.se.community.pojo.user.User;
+import com.fudan.se.community.pojo.vm.unfinishGTask;
 import com.fudan.se.community.service.RoomService;
 import com.fudan.se.community.service.UserService;
 import com.fudan.se.community.service.VClassService;
@@ -139,8 +140,8 @@ public class RetrieveInfoController {
     })
     // 想象了一下前端 task/group/userAccept
     @RequestMapping(value = "admin/retrieveTasks/unfinishedGroup", method = RequestMethod.GET)
-    public ResponseEntity<List<Task>> retrieveTasks_unfinishedGroup() {
-        List<Task> res = taskService.retrieveAllTasks_unfinishedGroup();
+    public ResponseEntity<List<unfinishGTask>> retrieveTasks_unfinishedGroup() {
+        List<unfinishGTask> res = taskService.retrieveAllTasks_unfinishedGroup();
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
@@ -152,8 +153,8 @@ public class RetrieveInfoController {
     // todo 构造response
     // 想象了一下前端 task/userAccept
     @RequestMapping(value = "/retrieveTasks/unfinishedFree", method = RequestMethod.POST)
-    public ResponseEntity<List<Task>> retrieveTasks_unfinishedFree(@RequestParam Integer userId) {
-        List<Task> res = taskService.retrieveAllTasks_unfinishedFree(userId);
+    public ResponseEntity<List<unfinishTask>> retrieveTasks_unfinishedFree(@RequestParam Integer userId) {
+        List<unfinishTask> res = taskService.retrieveAllTasks_unfinishedFree(userId);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 

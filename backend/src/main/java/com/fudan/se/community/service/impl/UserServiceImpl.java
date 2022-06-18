@@ -59,15 +59,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public String login(LoginDto loginDto) {
+        String username=loginDto.getUsername();
+        if (username.equals("teacherM")||username.equals("taM")){
+            throw new BadRequestException("You are  a teacher or ta!");
+        }else {
+            String pd = userMapper.selectPdByUsername(loginDto.getUsername());
+            if (pd == null) {
+                return "用户名错误";
+            } else if (pd.equals(MD5Utils.code(loginDto.getPassword()))) {
 
-        String pd = userMapper.selectPdByUsername(loginDto.getUsername());
-        if(pd==null){
-            return "用户名错误";
-        }else if(pd.equals(MD5Utils.code(loginDto.getPassword()))){
+                return "用户名密码正确";
+            }
+            throw new BadRequestException("Wrong password");
 
-            return "用户名密码正确";
         }
-        return "密码错误";
+    }
+    @Override
+    public String adminLogin(LoginDto loginDto) {
+    String username=loginDto.getUsername();
+    if (!username.equals("teacherM")&&!username.equals("taM")){
+        throw new BadRequestException("You are not a teacher or ta!");
+    }else {
+        String pd = userMapper.selectPdByUsername(loginDto.getUsername());
+        if(pd.equals(loginDto.getPassword())){
+            return "admin success";
+        }else {
+            throw new BadRequestException("password is wrong!");
+        }
+    }
     }
 
     @Override
@@ -125,6 +144,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         updateWrapper.set("ev", newEv);
         baseMapper.update( null,updateWrapper);
     }
+
 
 
     /**

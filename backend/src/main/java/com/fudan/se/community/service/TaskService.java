@@ -3,6 +3,7 @@ package com.fudan.se.community.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fudan.se.community.controller.response.TasksResponse;
 import com.fudan.se.community.pojo.vm.Task;
+import com.fudan.se.community.pojo.vm.unfinishGTask;
 import com.fudan.se.community.pojo.vm.unfinishTask;
 import java.util.List;
 
@@ -25,9 +26,9 @@ public interface TaskService extends IService<com.fudan.se.community.pojo.task.T
 
     List<unfinishTask> retrieveAllTasks_unfinishedPersonal();
 
-    List<Task> retrieveAllTasks_unfinishedGroup();
+    List<unfinishGTask> retrieveAllTasks_unfinishedGroup();
 
-    List<Task> retrieveAllTasks_unfinishedFree( int userId);
+    List<unfinishTask> retrieveAllTasks_unfinishedFree( int userId);
 
     void addPersonalEv(int userId, int taskId);
 
