@@ -22,22 +22,47 @@ public class unfinishTask {
     private Integer validity;
     private Integer isFree;
     private Integer checked;
-   private Integer userId;
+   private Integer userId;  //接受任务，也是提交任务的id
    private String file;
+   private String path;
+   private Integer publisher_id;  //发布者id
+   private String publisher_name;
+   private String publiser_phone;
+   private String publisher_email;
 
-   public unfinishTask(com.fudan.se.community.pojo.task.Task task, Accept accept){
-       this.ddl=task.getDdl();
-       this.description=task.getDescription();
-       this.ev=task.getEv();
-       this.isFree=task.getIsFree();
-       this.validity=task.getValidity();
-       this.name=task.getName();
-       this.teamSize=task.getTeamSize();
-       this.id=task.getId();
-       this.optional=task.getOptional();
-       this.checked=accept.getChecked();
-       this.file=accept.getFile();
-       this.userId=accept.getUserId();
+    private Integer uploaderId;
+    private  String uploaderUsername; //提交者的名字
+    private String uploaderPhone ;//提交者名字
+    private String uploaderEmail;// 提交者邮箱
+
+
+
+   public unfinishTask(com.fudan.se.community.pojo.task.Task task, Accept accept,User pubUser,User user) {
+       this.ddl = task.getDdl();
+       this.description = task.getDescription();
+       this.ev = task.getEv();
+       this.isFree = task.getIsFree();
+       this.validity = task.getValidity();
+       this.name = task.getName();
+       this.teamSize = task.getTeamSize();
+       this.id = task.getId();
+       this.optional = task.getOptional();
+       this.checked = accept.getChecked();
+       this.file = accept.getFile();
+       this.userId = accept.getUserId();
+       this.path=accept.getPath();
+
+       this.publisher_email = pubUser.getEmail();
+       this.publisher_id = pubUser.getId();
+       this.publiser_phone = pubUser.getPhoneNum();
+       this.publisher_name = pubUser.getUsername();
+          if (!accept.getFile().equals("")) {
+              this.uploaderId=user.getId();
+              this.uploaderUsername = user.getUsername();
+              this.uploaderEmail = user.getEmail();
+              this.uploaderPhone = user.getPhoneNum();
+          }
+
    }
 
 

@@ -21,18 +21,29 @@ public class unfinishGTask {
     private Timestamp ddl;
     private Integer validity;
     private Integer isFree;
-
+    private String path;
     private Integer checked;
     private String file;
     private String groupName;
     private Integer groupLeader;
     private Integer process;
+    private Integer groupId;
+
+    private Integer publisher_id;  //发布者id
+    private String publisher_name;
+    private String publiser_phone;
+    private String publisher_email;
+
+     private Integer uploaderId;
+    private  String uploaderUsername; //提交者的名字
+    private String uploaderPhone ;//提交者名字
+    private String uploaderEmail;// 提交者邮箱
 
     public unfinishGTask(){
 
     }
 
-    public unfinishGTask(com.fudan.se.community.pojo.task.Task task, VGroup group) {
+    public unfinishGTask(com.fudan.se.community.pojo.task.Task task, VGroup group,User pubUser,User user) {
         this.ddl = task.getDdl();
         this.description = task.getDescription();
         this.ev = task.getEv();
@@ -42,20 +53,24 @@ public class unfinishGTask {
         this.teamSize = task.getTeamSize();
         this.id = task.getId();
         this.optional = task.getOptional();
-
+        this.path=group.getPath();
         this.checked = group.getChecked();
         this.file = group.getFile();
-        this.groupName = group.getName();
-        if (group.getGroupLeader()==null){
-            this.groupLeader=null;
-        }else {
-            this.groupLeader=group.getGroupLeader();
-        }
 
-        if (group.getProcess()==null){
-            this.process=null;
-        }else {
-            this.process = group.getProcess();
+        this.groupId=group.getId();
+        this.groupName = group.getName();
+        this.groupLeader=group.getGroupLeader();
+        this.process = group.getProcess();
+
+        this.publisher_email = pubUser.getEmail();
+        this.publisher_id = pubUser.getId();
+        this.publiser_phone = pubUser.getPhoneNum();
+        this.publisher_name = pubUser.getUsername();
+        if (!group.getFile().equals("")) {
+            this.uploaderId=user.getId();
+            this.uploaderUsername = user.getUsername();
+            this.uploaderEmail = user.getEmail();
+            this.uploaderPhone = user.getPhoneNum();
         }
     }
 }

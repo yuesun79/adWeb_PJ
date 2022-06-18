@@ -166,8 +166,13 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
         List<unfinishTask> res= new ArrayList<unfinishTask>();
         for(int i =0 ;i<listAccept.size();i++){
             com.fudan.se.community.pojo.task.Task temTask =taskMapper.selectById(listAccept.get(i).getTaskId());
-            System.out.println(listAccept.get(i).getTaskId());
-            unfinishTask tem1 =new unfinishTask(temTask,listAccept.get(i));
+
+            User pubUser =userMapper.selectById(temTask.getPublisherId());   //发布任务者
+            User upUser =new User();
+            if (listAccept.get(i).getFile()!=null){
+                upUser=userMapper.selectById(listAccept.get(i).getUserId());  //上传文件者
+            }
+            unfinishTask tem1 =new unfinishTask(temTask,listAccept.get(i),pubUser,upUser);
             res.add(tem1);
         }
         return res;
@@ -183,7 +188,12 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
         List<unfinishGTask> res= new ArrayList<unfinishGTask>();
         for(int i =0 ;i<listAccept.size();i++){
             com.fudan.se.community.pojo.task.Task temTask =taskMapper.selectById(listAccept.get(i).getTaskId());
-            unfinishGTask tem1 =new unfinishGTask(temTask,listAccept.get(i));
+            User pubUser =userMapper.selectById(temTask.getPublisherId());
+            User upUser =new User();
+            if (listAccept.get(i).getFile()!=null){
+                upUser=userMapper.selectById(listAccept.get(i).getGroupLeader());  //上传文件者
+            }
+            unfinishGTask tem1 =new unfinishGTask(temTask,listAccept.get(i),pubUser,upUser);
             res.add(tem1);
         }
         return res;
@@ -209,7 +219,12 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
         List<unfinishTask> res= new ArrayList<unfinishTask>();
         for(int i =0 ;i<list.size();i++){  //根据accept表寻找符合条件的task
             com.fudan.se.community.pojo.task.Task temTask =taskMapper.selectById(list.get(i).getTaskId());
-            unfinishTask tem1 =new unfinishTask(temTask,list.get(i));
+            User pubUser =userMapper.selectById(temTask.getPublisherId());   //发布任务者
+            User upUser =new User();
+            if (list.get(i).getFile()!=null){
+                upUser=userMapper.selectById(list.get(i).getUserId());  //上传文件者
+            }
+            unfinishTask tem1 =new unfinishTask(temTask,list.get(i),pubUser,upUser);
             res.add(tem1);
         }
         return res;

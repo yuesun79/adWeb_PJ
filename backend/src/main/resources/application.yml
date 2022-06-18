@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8082
   servlet:
     context-path: /api/
 spring:
@@ -11,7 +11,7 @@ spring:
 #    password: 123456
     url: jdbc:mysql://localhost:3306/communityDB  #communityDB_copy
     username: root
-    password: 100279Sy
+    password: root #100279Sy
 #    Springfox使用的路径匹配是基于AntPathMatcher的，而Spring Boot 2.6.X使用的是PathPatternMatcher。
   mvc:
     pathmatch:
