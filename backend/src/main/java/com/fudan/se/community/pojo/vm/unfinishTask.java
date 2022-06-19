@@ -34,6 +34,7 @@ public class unfinishTask {
     private  String uploaderUsername; //提交者的名字
     private String uploaderPhone ;//提交者名字
     private String uploaderEmail;// 提交者邮箱
+    private Integer acceptId;
 
     private Integer groupId;
     private String groupName;
@@ -56,6 +57,7 @@ public class unfinishTask {
        this.file = accept.getFile();
        this.userId = accept.getUserId();
        this.path=accept.getPath();
+       this.acceptId=accept.getId();
 
        this.publisher_email = pubUser.getEmail();
        this.publisher_id = pubUser.getId();
