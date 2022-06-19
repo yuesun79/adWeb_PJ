@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class CheckGTaskCompleteRequest {
-    private Integer userId;
+    private Integer nowId;
     private Integer taskId;
     private Integer groupId;
 }

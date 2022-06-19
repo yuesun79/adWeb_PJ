@@ -99,7 +99,9 @@ public class PostTaskController {
         int nowId=checkPTaskCompleteRequest.getNowId();
         Task temTask =taskMapper.selectById(taskId);
         Integer pubUserId =temTask.getPublisherId() ;
-        String nowUserName=checkPTaskCompleteRequest.getUsername();
+
+        String nowUserName=userMapper.selectById(nowId).getUsername();
+
         if (!nowUserName.equals("teacherM")&&!nowUserName.equals("taM")&&nowId!=pubUserId){
             throw new BadRequestException("you are not a tearch or ta or publisher");
         }
@@ -107,6 +109,28 @@ public class PostTaskController {
         taskService.addPersonalEv(userId,taskId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @RequestMapping(value = "checkCompletion/freeGTask", method = RequestMethod.PUT)
+    public ResponseEntity<Object> checkCompletion_Gfree(@RequestBody CheckGTaskCompleteRequest checkGTaskCompleteRequest) {
+        int nowId =checkGTaskCompleteRequest.getNowId();  //接受任务的学生id
+        int taskId =checkGTaskCompleteRequest.getTaskId();  //已完成的任务id
+        int groupId=checkGTaskCompleteRequest.getGroupId();
+        Task temTask =taskMapper.selectById(taskId);
+        Integer pubUserId =temTask.getPublisherId() ;
+
+        String nowUserName=userMapper.selectById(nowId).getUsername();
+
+        if (!nowUserName.equals("teacherM")&&!nowUserName.equals("taM")&&nowId!=pubUserId){
+            throw new BadRequestException("you are not a tearch or ta or publisher");
+        }
+        vGroupService.checkCompletion(groupId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+
+
+
 
     // admin 不用审核 可以是团体任务
     @ApiOperation(value="管理员发布个人任务",notes = "insert task table")
