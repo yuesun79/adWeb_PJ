@@ -38,4 +38,6 @@ public interface TaskService extends IService<com.fudan.se.community.pojo.task.T
     void addGroupEv(int userId, int ev);
 
     List<Task> retrieveAllTasks_free();
+
+    unfinishFree retrieveAllTasks_AdminunfinishedFree();
 }

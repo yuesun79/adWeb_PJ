@@ -292,4 +292,63 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
         return listFreeTask;
     }
 
+    @Override
+    public unfinishFree retrieveAllTasks_AdminunfinishedFree() {
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq("is_free",1);//等于1的自由任务
+        List<com.fudan.se.community.pojo.task.Task> listFreeTask = taskMapper.selectList(wrapper); //所有自由任务列表
+
+        List<Accept> listAccept = new ArrayList<Accept>();
+        for(int i =0 ;i<listFreeTask.size();i++){
+            QueryWrapper wrapper1 = new QueryWrapper();
+            wrapper1.eq("task_id",listFreeTask.get(i).getId());
+            wrapper1.eq("checked",1);//小于等于1,即未完成的
+            List<Accept> listFreeUncompletionTask = acceptMapper.selectList(wrapper1);
+            for (int j =0;j<listFreeUncompletionTask.size();j++){
+                listAccept.add(listFreeUncompletionTask.get(j));  //所有未完成的已经accept的自由任务列表
+            }
+        }
+
+        List<VGroup> listGroup = new ArrayList<>();
+        for(int i =0 ;i<listFreeTask.size();i++){
+            QueryWrapper wrapper2 = new QueryWrapper();
+            wrapper2.eq("task_id",listFreeTask.get(i).getId());
+            wrapper2.eq("checked",1);//等于1,即已提交的
+            List<VGroup> listFreeUncompletionGTask = vGroupMapper.selectList(wrapper2);
+            for (int j =0;j<listFreeUncompletionGTask.size();j++){
+                listGroup.add(listFreeUncompletionGTask.get(j));  //所有未完成的已经accept的自由任务列表
+            }
+        }
+
+
+        //构造unfinishPersonal
+        List<unfinishTask> res= new ArrayList<unfinishTask>();
+        for(int i =0 ;i<listAccept.size();i++){
+            com.fudan.se.community.pojo.task.Task temTask =taskMapper.selectById(listAccept.get(i).getTaskId());
+            User pubUser =userMapper.selectById(temTask.getPublisherId());
+            User upUser =new User();
+            if (listAccept.get(i).getFile()!=null){
+                upUser=userMapper.selectById(listAccept.get(i).getUserId());  //上传文件者
+            }
+            unfinishTask tem1 =new unfinishTask(temTask,listAccept.get(i),pubUser,upUser);
+            res.add(tem1);
+        }
+
+        //构造unfinishGroup
+        List<unfinishGTask> resG= new ArrayList<unfinishGTask>();
+        for(int i =0 ;i<listGroup.size();i++){
+            com.fudan.se.community.pojo.task.Task temTask =taskMapper.selectById(listGroup.get(i).getTaskId());
+            User pubUser =userMapper.selectById(temTask.getPublisherId());
+            User upUser =new User();
+            if (listGroup.get(i).getFile()!=null){
+                upUser=userMapper.selectById(listGroup.get(i).getGroupLeader());  //上传文件者
+            }
+            unfinishGTask tem1 =new unfinishGTask(temTask,listGroup.get(i),pubUser,upUser);
+            resG.add(tem1);
+        }
+
+        unfinishFree resFree =new unfinishFree(res,resG);
+        return resFree;
+    }
+
 }

@@ -161,6 +161,17 @@ public class RetrieveInfoController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
+    @ApiOperation(value="教师助教获取未审核完成度的自由任务",notes = "select task + accept + user")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = ""),
+            @ApiResponse(code = 400, message = "权限不足")
+    })
+    @RequestMapping(value = "admin/retrieveTasks/unfinishedFree", method = RequestMethod.GET)
+    @AdminLoginToken
+    public ResponseEntity<unfinishFree> retrieveTasks_AdminunfinishedFree() {
+        unfinishFree res = taskService.retrieveAllTasks_AdminunfinishedFree();
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
 
 
     /** USER **/
