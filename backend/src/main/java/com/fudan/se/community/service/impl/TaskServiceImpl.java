@@ -10,11 +10,8 @@ import com.fudan.se.community.mapper.VGroupMapper;
 import com.fudan.se.community.pojo.task.Accept;
 import com.fudan.se.community.pojo.task.group.VGroup;
 import com.fudan.se.community.pojo.user.User;
-import com.fudan.se.community.pojo.vm.unfinishGTask;
-import com.fudan.se.community.pojo.vm.unfinishTask;
+import com.fudan.se.community.pojo.vm.*;
 import com.fudan.se.community.service.*;
-import com.fudan.se.community.pojo.vm.GroupTask;
-import com.fudan.se.community.pojo.vm.Task;
 
 import com.fudan.se.community.mapper.TaskMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -160,7 +157,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
     @Override
     public List<unfinishTask> retrieveAllTasks_unfinishedPersonal() {
         QueryWrapper wrapper = new QueryWrapper();
-        wrapper.le("checked",1);//相当于小于等于1
+        wrapper.eq("checked",1);//等于1
 
         List<Accept> listAccept = acceptMapper.selectList(wrapper);
         List<unfinishTask> res= new ArrayList<unfinishTask>();
@@ -181,7 +178,7 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
     @Override
     public List<unfinishGTask> retrieveAllTasks_unfinishedGroup() {
         QueryWrapper wrapper = new QueryWrapper();
-        wrapper.le("checked",1);//相当于小于等于1
+        wrapper.eq("checked",1);//相当于小于等于1
 
         List<VGroup> listAccept = vGroupMapper.selectList(wrapper);
         List<Task> list = new ArrayList<Task>();
@@ -200,34 +197,65 @@ public class TaskServiceImpl extends ServiceImpl<TaskMapper, com.fudan.se.commun
     }
 
     @Override
-    public List<unfinishTask> retrieveAllTasks_unfinishedFree(int userId) {
+    public unfinishFree retrieveAllTasks_unfinishedFree(int userId) {
+
+
         QueryWrapper wrapper = new QueryWrapper();
         wrapper.eq("is_free",1);//等于1的自由任务
+        wrapper.eq("publisher_id",userId);//发布者
         List<com.fudan.se.community.pojo.task.Task> listFreeTask = taskMapper.selectList(wrapper); //所有自由任务列表
-        List<Accept> list = new ArrayList<Accept>();
+
+        List<Accept> listAccept = new ArrayList<Accept>();
         for(int i =0 ;i<listFreeTask.size();i++){
             QueryWrapper wrapper1 = new QueryWrapper();
             wrapper1.eq("task_id",listFreeTask.get(i).getId());
-            wrapper1.eq("user_id",userId);
-            wrapper1.le("checked",1);//小于等于1,即未完成的
+            wrapper1.eq("checked",1);//小于等于1,即未完成的
             List<Accept> listFreeUncompletionTask = acceptMapper.selectList(wrapper1);
            for (int j =0;j<listFreeUncompletionTask.size();j++){
-               list.add(listFreeUncompletionTask.get(j));  //所有未完成的已经accept的自由任务列表
+               listAccept.add(listFreeUncompletionTask.get(j));  //所有未完成的已经accept的自由任务列表
            }
         }
-        List<Task> listTask = new ArrayList<Task>();
-        List<unfinishTask> res= new ArrayList<unfinishTask>();
-        for(int i =0 ;i<list.size();i++){  //根据accept表寻找符合条件的task
-            com.fudan.se.community.pojo.task.Task temTask =taskMapper.selectById(list.get(i).getTaskId());
-            User pubUser =userMapper.selectById(temTask.getPublisherId());   //发布任务者
-            User upUser =new User();
-            if (list.get(i).getFile()!=null){
-                upUser=userMapper.selectById(list.get(i).getUserId());  //上传文件者
+
+        List<VGroup> listGroup = new ArrayList<>();
+        for(int i =0 ;i<listFreeTask.size();i++){
+            QueryWrapper wrapper2 = new QueryWrapper();
+            wrapper2.eq("task_id",listFreeTask.get(i).getId());
+            wrapper2.eq("checked",1);//等于1,即已提交的
+            List<VGroup> listFreeUncompletionGTask = vGroupMapper.selectList(wrapper2);
+            for (int j =0;j<listFreeUncompletionGTask.size();j++){
+                listGroup.add(listFreeUncompletionGTask.get(j));  //所有未完成的已经accept的自由任务列表
             }
-            unfinishTask tem1 =new unfinishTask(temTask,list.get(i),pubUser,upUser);
+        }
+
+
+       //构造unfinishPersonal
+        List<unfinishTask> res= new ArrayList<unfinishTask>();
+        for(int i =0 ;i<listAccept.size();i++){
+            com.fudan.se.community.pojo.task.Task temTask =taskMapper.selectById(listAccept.get(i).getTaskId());
+            User pubUser =userMapper.selectById(temTask.getPublisherId());
+            User upUser =new User();
+            if (listAccept.get(i).getFile()!=null){
+                upUser=userMapper.selectById(listAccept.get(i).getUserId());  //上传文件者
+            }
+            unfinishTask tem1 =new unfinishTask(temTask,listAccept.get(i),pubUser,upUser);
             res.add(tem1);
         }
-        return res;
+
+        //构造unfinishGroup
+        List<unfinishGTask> resG= new ArrayList<unfinishGTask>();
+        for(int i =0 ;i<listGroup.size();i++){
+            com.fudan.se.community.pojo.task.Task temTask =taskMapper.selectById(listGroup.get(i).getTaskId());
+            User pubUser =userMapper.selectById(temTask.getPublisherId());
+            User upUser =new User();
+            if (listGroup.get(i).getFile()!=null){
+                upUser=userMapper.selectById(listGroup.get(i).getGroupLeader());  //上传文件者
+            }
+            unfinishGTask tem1 =new unfinishGTask(temTask,listGroup.get(i),pubUser,upUser);
+            resG.add(tem1);
+        }
+
+        unfinishFree resFree =new unfinishFree(res,resG);
+        return resFree;
     }
 
    //给个人任务的个人增加经验值

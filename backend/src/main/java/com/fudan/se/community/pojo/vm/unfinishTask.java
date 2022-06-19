@@ -35,6 +35,11 @@ public class unfinishTask {
     private String uploaderPhone ;//提交者名字
     private String uploaderEmail;// 提交者邮箱
 
+    private Integer groupId;
+    private String groupName;
+    private String groupFile;
+    private String groupPath;
+
 
 
    public unfinishTask(com.fudan.se.community.pojo.task.Task task, Accept accept,User pubUser,User user) {
@@ -64,7 +69,5 @@ public class unfinishTask {
           }
 
    }
-
-
 
     }

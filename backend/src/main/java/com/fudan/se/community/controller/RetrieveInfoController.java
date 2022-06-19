@@ -6,6 +6,7 @@ import com.fudan.se.community.controller.response.ClassResponse;
 import com.fudan.se.community.controller.response.PTasksMapResponse;
 import com.fudan.se.community.controller.response.TasksResponse;
 import com.fudan.se.community.pojo.user.User;
+import com.fudan.se.community.pojo.vm.unfinishFree;
 import com.fudan.se.community.pojo.vm.unfinishGTask;
 import com.fudan.se.community.service.RoomService;
 import com.fudan.se.community.service.UserService;
@@ -155,8 +156,8 @@ public class RetrieveInfoController {
             @ApiResponse(code = 400, message = "userId不对")
     })
     @RequestMapping(value = "/retrieveTasks/unfinishedFree", method = RequestMethod.POST)
-    public ResponseEntity<List<unfinishTask>> retrieveTasks_unfinishedFree(@RequestParam Integer userId) {
-        List<unfinishTask> res = taskService.retrieveAllTasks_unfinishedFree(userId);
+    public ResponseEntity<unfinishFree> retrieveTasks_unfinishedFree(@RequestParam Integer userId) {
+        unfinishFree res = taskService.retrieveAllTasks_unfinishedFree(userId);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
